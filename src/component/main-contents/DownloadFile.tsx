@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Settingbutton from "./SettingButton";
+import SettingButton from "./SettingButton";
 import Canvas from "./Canvas";
 
 interface File {

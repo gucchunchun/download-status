@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import DownloadFile from './downloadFile';
+import DownloadFile from './DownloadFile';
 
 interface File {
     name: string;
