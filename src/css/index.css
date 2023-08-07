@@ -1,6 +1,6 @@
 :root {
-    --bgC: 220,220,220; /*#DCDCDC*/
-    --contanerC: 241,245,249;   /*#F1F5F9*/
+    --bgC: 241,245,249; /*#F1F5F9*/
+    --contanerC: 246,250,254;   /*#F6FAFE*/
     --text: 0,0,0;  /*#000*/
     --subtext: 148,163,184; /*#94A3B8*/
     --button: 254,254,254;  /*#FEFEFE*/
@@ -60,7 +60,7 @@ button {
     border-radius: 5px;
 }
 button:hover {
-    scale: 0.98;
+    transform: scale(0.95);
     transition: all 0.2s ease-out;
 }
 

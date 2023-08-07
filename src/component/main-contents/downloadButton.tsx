@@ -5,12 +5,9 @@ interface MyComponentProps {
 }
 
 export default function DownloadButton(props:MyComponentProps) {
-    const [isHovered, setIsHovered] = useState(false);
-    function handleMouseEnter() {
-        setIsHovered(true);
-    }
-    function handleMouseLeave() {
-        setIsHovered(false);
+    const [isHovered, updateIsHovered] = useState<boolean>(false);
+    function handleHover() {
+        updateIsHovered((prev)=>{return !prev});
     }
     const buttonStyle: React.CSSProperties = {
         position: "relative",
@@ -41,7 +38,7 @@ export default function DownloadButton(props:MyComponentProps) {
         transition: "0.5s ease all",
     }
     return(
-        <button style={buttonStyle} onClick={props.onClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
+        <button style={buttonStyle} onClick={props.onClick} onMouseEnter={handleHover} onMouseLeave={handleHover} >
             <p style={pStyle}>go to downloads</p>
             <span style={spanStyle}></span>
         </button>

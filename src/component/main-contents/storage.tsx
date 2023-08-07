@@ -1,14 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 export default function Storage(props:{used:number}) {
-    const {used=200}=props; //initalize
-    const usedStorage:number = 200+used;
-    useEffect(()=>{},[usedStorage])
-
     const containerStyle: React.CSSProperties = {
         width: "90%",
         height: "28%",
-        margin: "0.25rem 0"
+        margin: "0.25rem 0",
+        backgroundColor: "#F1F5F9",
+        borderRadius: "5px",
     }
     const h1Style: React.CSSProperties = {
         width: "100%",
@@ -21,7 +19,7 @@ export default function Storage(props:{used:number}) {
         borderRadius: "5px",
     }
     const usedMeterStyle: React.CSSProperties = {
-        width: (usedStorage/10)+"%",
+        width: (props.used/10)+"%",
         height: "100%",
         border: "0.8px solid #94A3B8",
         borderRadius: "5px",
@@ -34,7 +32,7 @@ export default function Storage(props:{used:number}) {
             <div id="maxMeter" style={maxMeterStyle}>
                 <div id="usedMeter" style={usedMeterStyle}></div>
             </div>
-            <p>{usedStorage} MB / 100GB</p>
+            <p>{props.used} MB / 100GB</p>
         </div>
     );
 }

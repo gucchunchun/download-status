@@ -1,34 +1,29 @@
-import React, {useState} from 'react';
+import React from 'react';
 import DownloadFile from './DownloadFile';
 
 interface File {
     name: string;
-    state: (number|string);
+    status: (number|string);
 }
-const file1:File = {name: 'file1', state:"up to date"}
-const file2:File = {name: 'file2', state:0}
-const test:File[] = [
-    file1,
-    file2,
-    file1,
-    file2,
-    file1,
-    file2,
-    file1,
-    file2
-];
+interface MyComponentProps {
+    files: File[];
+}
 
-export default function DownloadFiles() {
-    let [files, updateFiles] = useState(test);
+export default function DownloadFiles(props: MyComponentProps) {
     const containerStyle: React.CSSProperties = {
-        overflowY: "scroll",
-        width: "90%",
-        height: "calc(70% - 4rem)",
-        flexWrap: "nowrap",
-    }
-    return(
-        <div className='container' style={containerStyle}>
-            {files.map((file, index:number) => {return <DownloadFile file={file} key={index} />;})}
-        </div>
+      overflowY: "scroll",
+      width: "90%",
+      height: "calc(70% - 4rem)",
+      flexWrap: "nowrap",
+      justifyContent: "flex-start",
+    };
+  
+    return (
+      <div className="container" style={containerStyle}>
+        {props.files.map((file, index: number) => (
+          <DownloadFile file={file} key={index} isLastChild={index === props.files.length - 1} />
+        ))}
+      </div>
     );
-}
+  }
+  

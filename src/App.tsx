@@ -14,4 +14,4 @@ export default function App() {
         <MainContainer isOpen={isOpen} />
       </React.StrictMode>
     );
-  }
+  } 
