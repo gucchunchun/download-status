@@ -1,0 +1,67 @@
+:root {
+    --bgC: 220,220,220; /*#DCDCDC*/
+    --contanerC: 241,245,249;   /*#F1F5F9*/
+    --text: 0,0,0;  /*#000*/
+    --subtext: 148,163,184; /*#94A3B8*/
+    --button: 254,254,254;  /*#FEFEFE*/
+    --resolve: 105,168,35;  /*#69A823*/
+    --reject: 238,56,59;    /*#EE383B*/
+}
+/* html {
+    font-size: 32px;
+} */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(var(--bgC));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+h1 {
+    font-size: 2rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+p {
+    font-size: 1rem;
+}
+.hidden {
+    display: none!important;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    align-items: center;
+    background-color: rgb(var(--contanerC));
+}
+.containerRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    align-items: center;
+    background-color: rgb(var(--contanerC));
+}
+button {
+    color: rgb(var(--text));
+    font-size: 1rem;
+    padding: 0.8rem;
+    border: 1px solid rgb(var(--text));
+    border-radius: 5px;
+}
+button:hover {
+    scale: 0.98;
+    transition: all 0.2s ease-out;
+}
+
+/* middle? */
