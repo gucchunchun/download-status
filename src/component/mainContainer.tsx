@@ -24,8 +24,7 @@ export default function MainContainer(props:MyComponentProps) {
         borderRadius: "5px",
         boxShadow: "1px 1px 20px rgba(0,0,0,0.1), -1px -1px 20px rgba(0,0,0,0.1)",
         filter: props.isMenuOpen? "blur(4px)":"blur(0)",
-        transform: props.isMenuOpen? "translate(-50%, -50%) scale(0)":"translate(-50%, -50%) scale(1)",
-        transition: "all 0.5s ease-in"
+        transform: props.isMenuOpen? "translate(-50%, -50%) scale(0)":"translate(-50%, -50%)",
     }
     return (
     <div className={props.isOpen ? 'container' : 'hidden container'} style={containerStyle}>

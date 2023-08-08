@@ -109,7 +109,6 @@ export default function App() {
         });
     }
     function handleStatusClick(clickedFile:(MenuFile|File)):void {
-        console.log(clickedFile);
         updateFiles((prev) => {
             prev.forEach((file)=>{
                 if(file===clickedFile){
