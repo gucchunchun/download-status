@@ -1,11 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import SettingButton from "./SettingButton";
 import Status from "./Status";
+import {File} from '../../App';
 
-interface File {
-    name: string;
-    status: (number|string);
-}
 interface MyComponentProps{
     file: File;
     key: number;

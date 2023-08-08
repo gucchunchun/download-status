@@ -1,10 +1,7 @@
 import React from 'react';
 import DownloadFile from './DownloadFile';
+import {File} from '../../App';
 
-interface File {
-    name: string;
-    status: (number|string);
-}
 interface MyComponentProps {
     files: File[];
 }

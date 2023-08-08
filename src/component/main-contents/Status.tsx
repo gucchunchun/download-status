@@ -38,7 +38,7 @@ export default function Canvas(props:MyComponentProps) {
             console.log("Canvas context is not found");
             return
         }
-        if(typeof props.status === "string"){
+        if(props.status === "up to date"){
             //complete icon
             c.beginPath();
             c.arc(width, height, width*2/3, 0, Math.PI*2);
@@ -53,7 +53,11 @@ export default function Canvas(props:MyComponentProps) {
             c.lineWidth = 6;
             c.stroke();
         }else{
-            const radian:number = Math.PI*2 * props.status/100;
+            let status = props.status;
+            if(typeof status == "string"){
+                status = 0;
+            }
+            const radian:number = Math.PI*2 * status/100;
             c.beginPath();
             c.arc(width, height, width*2/3, 0, Math.PI*2);
             c.fillStyle = "#94A3B8";
@@ -71,6 +75,19 @@ export default function Canvas(props:MyComponentProps) {
             c.arc(width, height, width/2, 0, Math.PI*2);
             c.fillStyle = "#F1F5F9";
             c.fill();
+
+            if(isHovered) {
+                c.strokeStyle = "#94A3B8";
+                c.lineCap = "round";
+                c.lineWidth = 4;
+                c.beginPath();
+                c.moveTo(width*7/8, height*3/4);
+                c.lineTo(width*7/8, height*5/4);
+                c.stroke();
+                c.moveTo(width*9/8, height*3/4);
+                c.lineTo(width*9/8, height*5/4);
+                c.stroke();
+            }
         }
     },[props]);
     const canvasButtonStyle: React.CSSProperties = {

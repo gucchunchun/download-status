@@ -43,6 +43,7 @@ p {
     justify-content:space-between;
     align-items: center;
     background-color: rgb(var(--contanerC));
+    border-radius: 5px;
 }
 .containerRow {
     display: flex;
@@ -51,6 +52,7 @@ p {
     justify-content:space-between;
     align-items: center;
     background-color: rgb(var(--contanerC));
+    border-radius: 5px;
 }
 button {
     color: rgb(var(--text));
@@ -62,6 +64,56 @@ button {
 button:hover {
     transform: scale(0.95);
     transition: all 0.2s ease-out;
+}
+button.disabled {
+    color: rgb(var(--text));
+    font-size: 1rem;
+    padding: 0.8rem;
+    border: 1px dotted rgb(var(--text));
+    border-radius: 5px;
+}
+button.disabled:hover {
+    transform: scale(1);
+}
+button.cross {
+    width:2rem;
+    height: 2rem;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    border: none;
+}
+button.cross::before, button.cross::after {
+    content: "";
+    width: 2rem;
+    height: 0.2rem;
+    background-color: rgba(var(--subtext), 0.5);
+    border-radius: 0.1rem;
+    position: absolute;
+    top:  50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+button.cross::before {
+    rotate: 45deg;
+}
+button.cross::after {
+    rotate: -45deg;
+}
+button.cross:hover::before, button.cross:hover::after{
+    background-color: rgba(var(--subtext), 1);
+}
+.leftflow {
+    left: 0;
+    padding-right: "auto";
+}
+.rightflow {
+    right: 0;
+    padding-left: "auto";
+}
+.slack {
+    background: url("/public/img/slack.png");
+    background-size:cover;
 }
 
 /* middle? */
