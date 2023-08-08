@@ -4,6 +4,8 @@ interface MyComponentProps {
     onClick?: any;
     isDisabled?:boolean;
     disableMsg?:string;
+    hoverColour?:string;
+    padding?:string;
     width:string;
     height:string;
     name:string
@@ -20,6 +22,7 @@ export default function BaseButton(props:MyComponentProps) {
         transition: "0.5s ease all",
         width: props.width,
         height: props.height,
+        padding: props.padding? props.padding: "0.8rem",
     }
     const pStyle: React.CSSProperties = {
         position: "absolute",
@@ -41,7 +44,7 @@ export default function BaseButton(props:MyComponentProps) {
         width: (isHovered&&!props.isDisabled)? "200%":"0",
         aspectRatio: "1/1",
         borderRadius: "50%",
-        backgroundColor: "#69A823",
+        backgroundColor: props.hoverColour?props.hoverColour:"#69A823",
         transition: "0.5s ease all",
     }
     return(

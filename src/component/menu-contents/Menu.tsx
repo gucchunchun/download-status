@@ -12,8 +12,10 @@ interface MyComponentProps {
 export default function Menu(props:MyComponentProps) {
     const [isAvailable, updateIsAvailable] = useState<boolean>(true);
     useEffect(() => {
-        if (1000-props.used<props.menu.size){
+        if (1000<props.used+props.menu.size){
             updateIsAvailable(false);
+        }else {
+            updateIsAvailable(true);
         }
     },[props]);
     

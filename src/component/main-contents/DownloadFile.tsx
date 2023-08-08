@@ -1,20 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import SettingButton from "./SettingButton";
 import Status from "./Status";
-import {File} from '../../App';
+import {File, MenuFile} from '../../App';
 
 interface MyComponentProps{
     file: File;
     key: number;
     isLastChild: boolean;
+    statusOnClick: any;
+    deleteFile: (file: MenuFile | File) => void;
 }
 export default function DownloadFile(props: MyComponentProps) {
-    const [settingOpen, updateSettingOpen] = useState<boolean>(false);
-  
-    function handleSettingButtonClick() {
-      updateSettingOpen(true);
+    function handleStatusButtonClick() {
+        props.statusOnClick(props.file);
     }
-  
     const containerStyle: React.CSSProperties = {
       width: "100%",
       height: "3rem",
@@ -22,9 +21,8 @@ export default function DownloadFile(props: MyComponentProps) {
       borderBottom: props.isLastChild ? "none" : "1px solid #94A3B8",
       boxSizing: "content-box",
     };
-  
     const textStyle: React.CSSProperties = {
-      width: "calc(100% - 7.5rem)",
+      width: "calc(100% - 8rem)",
       height: "100%",
       padding: "0 1rem",
       display: "flex",
@@ -34,7 +32,7 @@ export default function DownloadFile(props: MyComponentProps) {
   
     return (
       <div className="containerRow" style={containerStyle}>
-        <Status width="3rem" height="3rem" status={props.file.status} />
+        <Status width="3rem" height="3rem" status={props.file.status} onClick={handleStatusButtonClick}/>
         <div style={textStyle}>
           <h3>{props.file.name}</h3>
           <p>
@@ -43,7 +41,7 @@ export default function DownloadFile(props: MyComponentProps) {
               : props.file.status + "%"}
           </p>
         </div>
-        <SettingButton onClick={handleSettingButtonClick} />
+        <SettingButton deleteFile={()=>props.deleteFile(props.file)}/>
       </div>
     );
   }

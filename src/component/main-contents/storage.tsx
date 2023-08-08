@@ -4,7 +4,7 @@ export default function Storage(props:{used:number}) {
     const containerStyle: React.CSSProperties = {
         width: "90%",
         height: "28%",
-        margin: "0.25rem 0",
+        padding: "0.25rem 0",
         backgroundColor: "#F1F5F9",
         borderRadius: "5px",
     }
@@ -32,7 +32,7 @@ export default function Storage(props:{used:number}) {
             <div id="maxMeter" style={maxMeterStyle}>
                 <div id="usedMeter" style={usedMeterStyle}></div>
             </div>
-            <p>{props.used} MB / 100GB</p>
+            <p>{props.used} MB / 1GB</p>
         </div>
     );
 }

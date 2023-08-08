@@ -11,14 +11,6 @@ interface MyComponentProps {
     used: number;
 }
 export default function MenuContainer(props:MyComponentProps) {
-    let installFiles:MenuFile[] = [];
-    function handleMenuOnClick(file:MenuFile):void {
-        installFiles.push(file);
-    }
-    function handleCrossClick():void{
-        props.menuOnClick(installFiles);
-        props.crossOnClick();
-    }
     const containerStyle: React.CSSProperties = {
         position: "absolute",
         zIndex: 10000,
@@ -29,15 +21,14 @@ export default function MenuContainer(props:MyComponentProps) {
         padding: "2rem 1rem 1rem",
         transform: props.isMenuOpen? "translate(-50%, -50%) scale(1)":"translate(-50%, -50%) scale(0)",
         filter: "none",
-        transition: "all 0.3s ease-in",
-        backgroundColor: "#FFFFFF",
+        transition: "all 0.5s ease-in",
     }
     
     return(
         <div style={containerStyle} className='container' >
-            <button className='cross' onClick={handleCrossClick}></button>
+            <button className='cross' onClick={props.crossOnClick}></button>
             {props.menuList.map((menu, index) =>{
-                return <Menu menu={menu} used={props.used} key={index} index={index} onClick={handleMenuOnClick}/>;
+                return <Menu menu={menu} used={props.used} key={index} index={index} onClick={props.menuOnClick}/>;
             })}
         </div>
     );

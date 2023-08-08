@@ -28,13 +28,15 @@ h1 {
     font-size: 2rem;
 }
 h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 p {
-    font-size: 1rem;
+    font-size: 0.8rem;
 }
 .hidden {
-    display: none!important;
+    /* display: none!important; */
+    transform: scale(0)!important;
+    transition: all 0.3s ease-in;
 }
 .container {
     display: flex;
@@ -44,6 +46,7 @@ p {
     align-items: center;
     background-color: rgb(var(--contanerC));
     border-radius: 5px;
+    transform: scale(1);
 }
 .containerRow {
     display: flex;
@@ -53,6 +56,7 @@ p {
     align-items: center;
     background-color: rgb(var(--contanerC));
     border-radius: 5px;
+    transform: scale(1);
 }
 button {
     color: rgb(var(--text));
@@ -103,17 +107,13 @@ button.cross::after {
 button.cross:hover::before, button.cross:hover::after{
     background-color: rgba(var(--subtext), 1);
 }
-.leftflow {
-    left: 0;
-    padding-right: "auto";
-}
-.rightflow {
-    right: 0;
-    padding-left: "auto";
-}
-.slack {
-    background: url("/public/img/slack.png");
-    background-size:cover;
+.fade-in {
+    transform: scale(0);
+    transition: all 5s ease-in-out;
+  }
+  
+.fade-in.active {
+    transform: scale(1);
 }
 
 /* middle? */

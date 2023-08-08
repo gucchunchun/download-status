@@ -3,10 +3,10 @@ import React, {useState, useEffect, useRef} from 'react';
 interface MyComponentProps{
     width:string,
     height:string,
-    status:(number|string)
+    status:(number|string),
+    onClick: React.MouseEventHandler,
 }
 export default function Canvas(props:MyComponentProps) {
-    const {status=0} = props;
     const [isHovered, updateIsHovered] = useState<boolean>(false);
     function handleHover() {
         updateIsHovered((prev)=>{return !prev});
@@ -54,8 +54,14 @@ export default function Canvas(props:MyComponentProps) {
             c.stroke();
         }else{
             let status = props.status;
+            let isStopping = false;
             if(typeof status == "string"){
-                status = 0;
+                if(status.includes("resume download from ")){
+                    status = Number(status.slice(0, -1).replace("resume download from ", ""));
+                    isStopping = true;
+                }else {
+                    status = 0;
+                }
             }
             const radian:number = Math.PI*2 * status/100;
             c.beginPath();
@@ -76,31 +82,44 @@ export default function Canvas(props:MyComponentProps) {
             c.fillStyle = "#F1F5F9";
             c.fill();
 
-            if(isHovered) {
-                c.strokeStyle = "#94A3B8";
-                c.lineCap = "round";
-                c.lineWidth = 4;
+            if(isStopping) {
+                if(isHovered){
+                    c.globalAlpha = 1;
+                }else {
+                    c.globalAlpha = 0.3;
+                }
+                c.fillStyle = "#94A3B8";
                 c.beginPath();
                 c.moveTo(width*7/8, height*3/4);
                 c.lineTo(width*7/8, height*5/4);
+                c.lineTo(width*5/4, height);
+                c.fill();
+            }
+
+            if(isHovered&&!isStopping) {
+                c.strokeStyle = "#94A3B8";
+                c.lineCap = "round";
+                c.lineWidth = 6;
+                c.beginPath();
+                c.moveTo(width*7/8, height*5/6);
+                c.lineTo(width*7/8, height*7/6);
                 c.stroke();
-                c.moveTo(width*9/8, height*3/4);
-                c.lineTo(width*9/8, height*5/4);
+                c.moveTo(width*9/8, height*5/6);
+                c.lineTo(width*9/8, height*7/6);
                 c.stroke();
             }
         }
-    },[props]);
+    },);
     const canvasButtonStyle: React.CSSProperties = {
         width: props.width,
         height: props.height,
-        margin: "0 0.5rem 0 1rem",
         padding: 0,
         border: "none",
         transform: (isHovered&&typeof props.status==="number") ? "scale(0.95)": "scale(1)"
     }
 
     return(
-        <button style={canvasButtonStyle} ref={buttonRef} onMouseEnter={handleHover} onMouseLeave={handleHover}>
+        <button style={canvasButtonStyle} ref={buttonRef} onMouseEnter={handleHover} onMouseLeave={handleHover} onClick={props.onClick}>
             <canvas ref={canvasRef}></canvas>
         </button>
     );

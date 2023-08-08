@@ -27,7 +27,7 @@ export enum Icons {
 export interface MenuFile extends File {
     icon:Icons;
 }
-let FilesMenu =  [
+const FilesMenu =  [
     {name: 'slack', status:"waiting", size:100, icon:Icons.slack},
     {name: 'facebook', status:"waiting", size:200, icon:Icons.facebook},
     {name: 'instagram', status:"waiting", size:150, icon:Icons.instagram},
@@ -41,6 +41,7 @@ export default function App() {
     const [isMenuOpen, updateIsMenuOpen] = useState<boolean>(false);
     const [files, updateFiles] = useState<File[]>(test);
     const [used, updateUsed] = useState<number>(0);
+    const [willbeused, updateWillbeUsed] = useState<number>(0);
   
     useEffect(() => {
       const intervalId = setInterval(() => {
@@ -81,7 +82,13 @@ export default function App() {
             });
             return new_used;
         })
-        
+        updateWillbeUsed(()=>{
+            let new_willbeused:number=0;
+            files.forEach((file) =>{
+                new_willbeused += file.size;
+            });
+            return new_willbeused;
+        });
     },[files])
     function handleButtonClick() {
       setIsOpen((prevIsOpen) => !prevIsOpen);
@@ -91,27 +98,45 @@ export default function App() {
             return !prev;
         });
     }
-    function handleMenuClick(installFiles:MenuFile[]):void {
+    function handleMenuClick(installFile:MenuFile):void {
         updateMenu((prev) => {
-            const new_menu = prev.filter((menu) => !installFiles.includes(menu));
-            return new_menu;
+            prev.splice(prev.indexOf(installFile),1);
+            return prev;
         });
         updateFiles((prev)=>{
-            installFiles.forEach((file)=>{
-                prev.push(file);
+            prev.push(installFile);
+            return prev;
+        });
+    }
+    function handleStatusClick(clickedFile:(MenuFile|File)):void {
+        console.log(clickedFile);
+        updateFiles((prev) => {
+            prev.forEach((file)=>{
+                if(file===clickedFile){
+                    if(typeof file.status==="number"){
+                        file.status="resume download from "+ file.status + "%";
+                    }else if(file.status.includes("resume download from ")){
+                        file.status=Number(file.status.slice(0, -1).replace("resume download from ", ""))
+                    }
+                }
             })
             return prev;
         });
     }
-    function handleCrossClick(installFiles:MenuFile[]):void {
-        handleMenuButtonClick();
-
+    function deleteFile(file:(MenuFile|File)):void {
+        if("icon" in file){
+            updateMenu((prev)=>[...prev, file as MenuFile]);
+        }
+        updateFiles((prev) => {
+            const new_files = prev.filter((prefile)=>prefile!==file);
+            return new_files
+        });
     }
     return (
       <React.StrictMode>
         <CloudButton onClick={handleButtonClick} />
-        <MainContainer isOpen={isOpen} menuOnClick={handleMenuButtonClick} isMenuOpen={isMenuOpen} files={files} used={used}/>
-        {isMenuOpen?<MenuContainer  menuList={menu} used={used} menuOnClick={handleMenuClick} crossOnClick={handleMenuButtonClick} isMenuOpen={isMenuOpen} />:null}
+        <MainContainer isOpen={isOpen} menuOnClick={handleMenuButtonClick} statusOnClick={handleStatusClick} deleteFile={deleteFile} isMenuOpen={isMenuOpen} files={files} used={used}/>
+        <MenuContainer  menuList={menu} used={willbeused} menuOnClick={handleMenuClick} crossOnClick={handleMenuButtonClick} isMenuOpen={isMenuOpen} />
       </React.StrictMode>
     );
   } 

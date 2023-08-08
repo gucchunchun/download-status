@@ -1,9 +1,11 @@
 import React from 'react';
 import DownloadFile from './DownloadFile';
-import {File} from '../../App';
+import {File, MenuFile} from '../../App';
 
 interface MyComponentProps {
     files: File[];
+    statusOnClick: any;
+    deleteFile: (file: MenuFile | File) => void;
 }
 
 export default function DownloadFiles(props: MyComponentProps) {
@@ -18,7 +20,7 @@ export default function DownloadFiles(props: MyComponentProps) {
     return (
       <div className="container" style={containerStyle}>
         {props.files.map((file, index: number) => (
-          <DownloadFile file={file} key={index} isLastChild={index === props.files.length - 1} />
+          <DownloadFile file={file} key={index} isLastChild={index === props.files.length - 1} statusOnClick={props.statusOnClick} deleteFile={props.deleteFile}/>
         ))}
       </div>
     );
