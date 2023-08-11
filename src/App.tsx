@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import * as Type from './Type';
-import { AuthForm } from './component/index';
+import { AuthForm, Dialog } from './component/index';
 
 //TODO: 
 //dialog component => includes login page ??
@@ -58,13 +58,16 @@ const App:React.FC = () => {
         );
         setUpdatedFiles(tempUpdatedFiles);
         setAddFilesMenu(tempAddFilesMenu);
-
+        console.log(userData===null)
     },[userData])
     //change updatedFiles & addFilesMenu after deleting or updating files
     
     return (
-      <>
-       {userData === null? <AuthForm handleLogin={handleLogin}/>:null}
+        <>
+        <Dialog isDisabled={userData===null?false:true}>
+            <AuthForm handleLogin={handleLogin}/>
+        </Dialog>
+       
        <p>main contents</p>
       </>
     );
