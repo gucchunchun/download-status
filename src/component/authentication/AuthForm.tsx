@@ -11,6 +11,7 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
     const [error, setError] = useState(null);
 
 
+    // TODO: prevent 'null' submit
     function handleLoginSubmit(e:React.FormEvent<HTMLFormElement>):void {
         e.preventDefault();
         fetch('/api/login', {
@@ -63,8 +64,12 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
             console.log(err.message);
         });
     }
+    function handleToggleButton():void {
+        setIsLogin((prev)=> !prev);
+    }
     return(
         <form onSubmit={isLogin? handleLoginSubmit: handleSignUpSubmit}>
+            <p>{isLogin? "login": "sign up"}</p>
             <label htmlFor='id'>ID</label>
             <input 
                 id='id'
@@ -82,6 +87,7 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
                 onChange={(e) => setPwd(e.target.value)}
             />
             <button type='submit'>{isLogin? "login": "sign up"}</button>
+            <button type='button' onClick={handleToggleButton}>{isLogin? "sign up": "login"}</button>
         </form>
     )
 }
