@@ -2,33 +2,65 @@ import React, {useState, useEffect} from 'react';
 import * as Type from './Type';
 import { AuthForm } from './component/index';
 
+//TODO: 
+//dialog component
+//toggle authForm
+//refactor component
+
 const App:React.FC = () => {
     const [dataIndex, setDataIndex] = useState<(number|null)>(null);
     const [userData, setUserData] = useState<(Type.User|null)>(null);
     const [files, setFiles] = useState<(Type.File[]|null)>(null);
-    const [menu, setMenu] = useState<(Type.File[]|null)>(null);
+    const [updatedfiles, setUpdatedFiles] = useState<(Type.File[]|null)>(null);
+    const [addFilesMenu, setAddFilesMenu] = useState<(Type.File[]|null)>(null);
     const [used, setUsed] = useState<number>(0);
     const [willUsed, setWillUsed] = useState<number>(0);
   
     //set userData
     function handleLogin(index:number, user: Type.User) {
         setDataIndex(index);
-        setUserData(user);
+        setUserData(user)
     }
-    //once after mounting
+    //once after mounting: get Files data
     useEffect(() =>{
         fetch('/api/files', {
             method: 'GET',
         })
         .then((res)=>res.json())
-        .then((fileData:Type.File[])=>{
-            setFiles(fileData);
+        .then((data:{files:Type.File[]})=>{
+            setFiles(data.files);
         })
         .catch((err)=>{
             console.log(err);
-            alert('ERROR: please reload page again')
+            //dialog is better?
+            //https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role
+            // alert('ERROR: please reload page again')
+            setTimeout(()=>{
+                window.location.reload();
+            },5000);
         });
     }, []);
+    //set updated files & addFilesMenu after userData & files are set
+    // can not be done in handleLogin because useState is asynchronous
+    useEffect(()=> {
+        //type guarding
+        if ( files === null ) {
+            return;
+        }
+        if ( userData === null ) {
+            alert('ERROR: please login or sign up') 
+            return;
+        }
+        const tempUpdatedFiles = files.filter((file)=>
+            userData.data.updatedFiles.includes(file.filename)
+        );
+        const tempAddFilesMenu = files.filter((file)=>
+            !userData.data.updatedFiles.includes(file.filename)
+        );
+        setUpdatedFiles(tempUpdatedFiles);
+        setAddFilesMenu(tempAddFilesMenu);
+    },[userData])
+    //change updatedFiles & addFilesMenu after deleting or updating files
     
     return (
       <>
