@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import * as Type from './Type';
+import { AuthForm } from './component/index';
 
 const App:React.FC = () => {
     const [dataIndex, setDataIndex] = useState<(number|null)>(null);
@@ -31,6 +32,7 @@ const App:React.FC = () => {
     
     return (
       <>
+       <AuthForm handleLogin={handleLogin}/>
       </>
     );
 } 
