@@ -6,14 +6,17 @@ interface AuthFormProps  {
 }
 const AuthForm:React.FC<AuthFormProps> = (props) => {
     const [isLogin, setIsLogin] = useState<boolean>(false);
-    const [id, setId] = useState("");
-    const [pwd, setPwd] = useState("");
-    const [error, setError] = useState(null);
+    const [id, setId] = useState<string>("");
+    const [pwd, setPwd] = useState<string>("");
+    const [error, setError] = useState<(string|null)>(null);
 
 
-    // TODO: prevent 'null' submit
     function handleLoginSubmit(e:React.FormEvent<HTMLFormElement>):void {
         e.preventDefault();
+        if ( id === "" || pwd === "" ) {
+            setError('ID and Password must be filled')
+            return;
+        }
         fetch('/api/login', {
             method: 'POST',
             headers: {
@@ -34,12 +37,16 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
             props.handleLogin(data.token, data.user);
         })
         .catch((err)=>{
-            setError(err);
-            console.log(err);
+            setError(err.message);
+            console.log(err.message);
         });
     }
     function handleSignUpSubmit(e:React.FormEvent<HTMLFormElement>):void {
         e.preventDefault();
+        if ( id === "" || pwd === "" ) {
+            setError('ID and Password must be filled')
+            return;
+        }
         fetch('/api/signUp', {
             method: 'POST',
             headers: {
@@ -50,7 +57,7 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
         .then((res)=> {
             if(res.status===401) {
                 return res.json().then((errData)=>{
-                    throw new Error(errData);
+                    throw new Error(errData.message);
                 })
             }
             return res.json()
@@ -69,6 +76,7 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
     }
     return(
         <form onSubmit={isLogin? handleLoginSubmit: handleSignUpSubmit}>
+            {error? <p>{error}</p>: null}
             <p>{isLogin? "login": "sign up"}</p>
             <label htmlFor='id'>ID</label>
             <input 
@@ -78,7 +86,7 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
                 value={id}
                 onChange={(e) => setId(e.target.value)}
             />
-            <label htmlFor='pwd'>ID</label>
+            <label htmlFor='pwd'>Password</label>
             <input 
                 id='pwd'
                 name='pwd'
