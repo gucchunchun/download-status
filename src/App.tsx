@@ -3,8 +3,7 @@ import * as Type from './Type';
 import { AuthForm } from './component/index';
 
 //TODO: 
-//dialog component
-//toggle authForm
+//dialog component => includes login page ??
 //refactor component
 
 const App:React.FC = () => {
@@ -19,7 +18,7 @@ const App:React.FC = () => {
     //set userData
     function handleLogin(index:number, user: Type.User) {
         setDataIndex(index);
-        setUserData(user)
+        setUserData(user);
     }
     //once after mounting: get Files data
     useEffect(() =>{
@@ -59,12 +58,14 @@ const App:React.FC = () => {
         );
         setUpdatedFiles(tempUpdatedFiles);
         setAddFilesMenu(tempAddFilesMenu);
+
     },[userData])
     //change updatedFiles & addFilesMenu after deleting or updating files
     
     return (
       <>
-       <AuthForm handleLogin={handleLogin}/>
+       {userData === null? <AuthForm handleLogin={handleLogin}/>:null}
+       <p>main contents</p>
       </>
     );
 } 

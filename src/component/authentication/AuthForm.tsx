@@ -5,9 +5,9 @@ interface AuthFormProps  {
     handleLogin:(index:number, user:Type.User) => void;
 }
 const AuthForm:React.FC<AuthFormProps> = (props) => {
-    const [isLogin, setIsLogin] = useState<boolean>(false);
-    const [id, setId] = useState<string>("");
-    const [pwd, setPwd] = useState<string>("");
+    const [isLogin, setIsLogin] = useState<boolean>(true);
+    const [id, setId] = useState<string>('');
+    const [pwd, setPwd] = useState<string>('');
     const [error, setError] = useState<(string|null)>(null);
 
 
@@ -73,11 +73,13 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
     }
     function handleToggleButton():void {
         setIsLogin((prev)=> !prev);
+        setId('');
+        setPwd('');
     }
     return(
         <form onSubmit={isLogin? handleLoginSubmit: handleSignUpSubmit}>
             {error? <p>{error}</p>: null}
-            <p>{isLogin? "login": "sign up"}</p>
+            <p>{isLogin? 'login': 'sign up'}</p>
             <label htmlFor='id'>ID</label>
             <input 
                 id='id'
@@ -94,7 +96,7 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
                 value={pwd}
                 onChange={(e) => setPwd(e.target.value)}
             />
-            <button type='submit'>{isLogin? "login": "sign up"}</button>
+            <button type='submit'>{isLogin? 'login': 'sign up'}</button>
             <button type='button' onClick={handleToggleButton}>{isLogin? "sign up": "login"}</button>
         </form>
     )
