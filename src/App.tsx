@@ -2,12 +2,33 @@ import React, {useState, useEffect} from 'react';
 import * as Type from './Type';
 
 const App:React.FC = () => {
+    const [dataIndex, setDataIndex] = useState<(number|null)>(null);
     const [userData, setUserData] = useState<(Type.User|null)>(null);
     const [files, setFiles] = useState<(Type.File[]|null)>(null);
     const [menu, setMenu] = useState<(Type.File[]|null)>(null);
     const [used, setUsed] = useState<number>(0);
     const [willUsed, setWillUsed] = useState<number>(0);
   
+    //set userData
+    function handleLogin(index:number, user: Type.User) {
+        setDataIndex(index);
+        setUserData(user);
+    }
+    //once after mounting
+    useEffect(() =>{
+        fetch('/api/files', {
+            method: 'GET',
+        })
+        .then((res)=>res.json())
+        .then((fileData:Type.File[])=>{
+            setFiles(fileData);
+        })
+        .catch((err)=>{
+            console.log(err);
+            alert('ERROR: please reload page again')
+        });
+    }, []);
+    
     return (
       <>
       </>
