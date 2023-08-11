@@ -18,9 +18,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "preserve"
   },
   "include": [
     "src"
-  ]
+, "waiting_refactored/BaseButton.tsx", "waiting_refactored/mainContainer.tsx", "waiting_refactored/cloudButton.tsx", "waiting_refactored/MenuContainer.tsx"  ]
 }
