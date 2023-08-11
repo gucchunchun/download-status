@@ -1,43 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { CloudButton } from './component/CloudButton';
-import MainContainer from './component/MainContainer';
-import MenuContainer from './component/MenuContainer';
-
-
-export interface File {
-    name: string;
-    status: (number|string);
-    size: number;
-    icon?:Icons;
-}
-const file1:File = {name: 'file1', status:"up to date", size: 200}
-const file2:File = {name: 'file2', status:30,size:300}
-const test:File[] = [
-    file1,
-    file2,
-];
-
-export enum Icons {
-    slack = "/img/slack.png",
-    facebook = "/img/facebook.png",
-    instagram = "/img/instagram.png",
-    discord = "/img/discord.png",
-    x = "/img/x.png",
-}
-export interface MenuFile extends File {
-    icon:Icons;
-}
-const FilesMenu =  [
-    {name: 'slack', status:"waiting", size:100, icon:Icons.slack},
-    {name: 'facebook', status:"waiting", size:200, icon:Icons.facebook},
-    {name: 'instagram', status:"waiting", size:150, icon:Icons.instagram},
-    {name: 'discord', status:"waiting", size:300, icon:Icons.discord},
-    {name: 'x', status:"waiting", size:600, icon:Icons.x},
-]
+import * as Type from './Type';
 
 export default function App() {
     const [isOpen, setIsOpen] = useState(false);
-    const [menu, updateMenu] = useState<MenuFile[]>(FilesMenu);
+    const [menu, updateMenu] = useState<Type.File[]>(FilesMenu);
     const [isMenuOpen, updateIsMenuOpen] = useState<boolean>(false);
     const [files, updateFiles] = useState<File[]>(test);
     const [used, updateUsed] = useState<number>(0);
