@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import * as Type from '../../Type';
+import { GradientButton } from '../index';
 
 interface AuthFormProps  {
     handleLogin:(index:number, user:Type.User) => void;
@@ -96,8 +97,8 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
                 value={pwd}
                 onChange={(e) => setPwd(e.target.value)}
             />
-            <button type='submit'>{isLogin? 'login': 'sign up'}</button>
-            <button type='button' onClick={handleToggleButton}>{isLogin? "sign up": "login"}</button>
+            <GradientButton type='submit' text={isLogin? 'login': 'sign up'} />
+            <GradientButton type='button' onClick={handleToggleButton} text={isLogin? "sign up": "login"} />
         </form>
     )
 }

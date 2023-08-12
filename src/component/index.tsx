@@ -1,2 +1,3 @@
 export { default as AuthForm } from './authentication/AuthForm';
 export { default as Dialog } from './dialog/Dialog';
+export { default as GradientButton } from './buttons/GradientButton';
