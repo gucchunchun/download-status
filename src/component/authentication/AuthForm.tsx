@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react';
+import styled from '@emotion/styled'
 import * as Type from '../../Type';
 import { GradientButton } from '../index';
 

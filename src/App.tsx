@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import * as Type from './Type';
-import { AuthForm, Dialog } from './component/index';
+import { AuthForm, Dialog, MainContainer } from './component/index';
 
 //TODO: 
 //dialog component => includes login page ??
@@ -67,7 +67,7 @@ const App:React.FC = () => {
         <Dialog isDisabled={userData===null?false:true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
-       
+        <MainContainer used={200} />
        <p>main contents</p>
       </>
     );
