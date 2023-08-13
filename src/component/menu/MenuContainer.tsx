@@ -5,8 +5,7 @@ import * as Type from '../../Type';
 import { Menu } from './index';
 
 interface MenuContainerProps {
-    isOpen?: boolean;
-    menuOnClick?: React.MouseEventHandler;
+    menuCloseOnClick: ()=>void;
     statusOnClick?: Function;
     isMenuOpen?: boolean;
     files: Type.File[];
@@ -28,8 +27,8 @@ const ContainerDiv = styled('div')`
 `;
 const CrossButton = styled('button')`
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0.25rem;
+    right: 0.25rem;
     width: 1rem;
     height: 1rem;
     &::before,
@@ -60,7 +59,7 @@ const MenuContainer:React.FC<MenuContainerProps> = (props) => {
     
     return(
         <ContainerDiv>
-            <CrossButton />
+            <CrossButton onClick={props.menuCloseOnClick} />
             {props.files.map((file, index)=>{
                 return <Menu file={file} key={index} index={index} used={props.used} onClick={()=>{}}></Menu>
             })}

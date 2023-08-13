@@ -5,7 +5,7 @@ import * as Type from '../../Type';
 import { GradientButton } from '../index';
 
 interface SettingButtonProps{
-    deleteFile: () => void;
+    deleteOnClick: () => void;
 }
 
 interface SettingOpenButtonProps {
@@ -56,7 +56,7 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
     }
     //when settingOpen 
     function handleDeleteBClick() {
-        props.deleteFile();
+        props.deleteOnClick();
         handleClick();
     }
     function handleMouseLeave2() {

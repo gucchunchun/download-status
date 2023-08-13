@@ -3,17 +3,21 @@ import * as Type from './Type';
 import { AuthForm, Dialog, MainContainer, MenuContainer } from './component/index';
 
 //TODO: 
-//dialog component => includes login page ??
 //refactor component
+const testFile:Type.File = {filename:'text', size:300, status: {status: Type.Status.Updating, completed:30}}
+const testFile2:Type.File = {filename:'text', size:300, status: {status: Type.Status.Waiting, completed:0}}
+const testFile3:Type.File = {filename:'text', size:300, status: {status: Type.Status.Pausing, completed:60}}
+
 
 const App:React.FC = () => {
     const [dataIndex, setDataIndex] = useState<(number|null)>(null);
     const [userData, setUserData] = useState<(Type.User|null)>(null);
-    const [files, setFiles] = useState<(Type.File[]|null)>(null);
-    const [updatedfiles, setUpdatedFiles] = useState<(Type.File[]|null)>(null);
-    const [addFilesMenu, setAddFilesMenu] = useState<(Type.File[]|null)>(null);
+    const [files, setFiles] = useState<Type.File[]>([]);
+    const [updatedFiles, setUpdatedFiles] = useState<Type.File[]>([]);
+    const [addFilesMenu, setAddFilesMenu] = useState<Type.File[]>([]);
     const [used, setUsed] = useState<number>(0);
     const [willUsed, setWillUsed] = useState<number>(0);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   
     //set userData
     function handleLogin(index:number, user: Type.User) {
@@ -43,9 +47,6 @@ const App:React.FC = () => {
     // can not be done in handleLogin because useState is asynchronous
     useEffect(()=> {
         //type guarding
-        if ( files === null ) {
-            return;
-        }
         if ( userData === null ) {
             alert('ERROR: please login or sign up') 
             return;
@@ -59,19 +60,65 @@ const App:React.FC = () => {
         setUpdatedFiles(tempUpdatedFiles);
         setAddFilesMenu(tempAddFilesMenu);
         console.log(userData===null)
-    },[userData])
+    },[files, userData])
     //change updatedFiles & addFilesMenu after deleting or updating files
     
-    const testFile:Type.File = {filename:'text', size:300, status: {status: Type.Status.Updating, completed:30}}
-    const testFile2:Type.File = {filename:'text', size:300, status: {status: Type.Status.Waiting, completed:0}}
-    const testFile3:Type.File = {filename:'text', size:300, status: {status: Type.Status.Pausing, completed:60}}
+    function changeFilesStatus(status:Type.Status, index:number):void {
+        switch (status) {
+            case Type.Status.Pausing:
+                setAddFilesMenu((prevFiles)=>{
+                    prevFiles.map((file,i)=>{
+                        if(i===index){
+                            file.status.status=Type.Status.Updating;
+                        } 
+                        return file;
+                    });
+                    return prevFiles;
+                });
+                return;
+            default:
+                setAddFilesMenu((prevFiles)=>{
+                    prevFiles.map((file,i)=>{
+                        if(i===index){
+                            file.status.status=Type.Status.Pausing;
+                        } 
+                        return file;
+                    });
+                    return prevFiles;
+                });
+                return;
+        };
+    }
+    function deleteUpdatedFile(index:number):void {
+        setUpdatedFiles((prevFiles)=>{
+            setAddFilesMenu((prevAddFiles)=>{
+                prevAddFiles.push(prevFiles[index])
+                return prevAddFiles;
+            });
+            prevFiles.filter((file, i)=>i !== index);
+            return prevFiles;
+        })
+    }
+    //onClick
+    function handleMenuOpenClick():void {
+        setIsMenuOpen((prev)=>!prev);
+    }
     return (
         <>
         <Dialog isDisabled={true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
-        <MainContainer used={null} />
-        <MenuContainer used={200} files={[testFile, testFile2, testFile3]} />
+        <MainContainer 
+            files={updatedFiles} 
+            used={used} 
+            menuOpenOnClick={handleMenuOpenClick}
+            statusOnClick={changeFilesStatus}
+            deleteOnClick={deleteUpdatedFile}/>
+        {isMenuOpen?
+            <MenuContainer menuCloseOnClick={handleMenuOpenClick} used={200} files={[testFile, testFile2, testFile3]} />
+        :
+            null
+        }
       </>
     );
 } 
