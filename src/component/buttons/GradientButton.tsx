@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 
 interface GradientButtonProps {
     text: string;
+    isDisabled: boolean;
+    disabledText?: string;
     type?: "button" | "submit" | "reset" ;
     width?: string;
     padding?: string;
@@ -16,6 +18,7 @@ interface GradientButtonProps {
 
 interface StyledButtonProps {
     text: string; 
+    isDisabled: boolean;
     width?: string;
     padding?: string;
     border?: string;
@@ -31,6 +34,7 @@ const StyledButton = styled('button')<StyledButtonProps>`
     border: ${props=>props.border || '1px solid #000'};
     border-radius: 0.5rem;
     background-color: ${props=>props.backgroundColor || '#FFFFFF'};
+    opacity: ${props=>props.isDisabled? '0.3': '1'};
 `;
 interface StyledTextProps {
     color?: string;
@@ -65,16 +69,32 @@ const StyledSpan = styled('span')<StyledSpanProps>`
     background-color: ${props=>props.bgColor || '#000'};
     transition: 0.5s ease all;
 `;
+/**
+ * 
+ * @param {string} props.text -text to display on button
+ * @param {boolean} props.isDisabled - if the button is disabled
+ * @param {string} props.disabledText -text to display on button when the button is disabled
+ * @param {("button" | "submit" | "reset")} props.type - button type
+ * @param {string} props.width -button width. it would be text.length*1rem if it is not defined
+ * @param {string} props.padding -button padding. it would be 0.5rem if it is not defined
+ * @param {string} props.textColor - text's color. it would be black(#000) if it is not defined
+ * @param {string} props.hoveredTextColor - text's color when the button is hovered. it would be white(#FFFFFF) if it is not defined
+ * @param {string} props.border - it would be '1px solid #000' if it is not defined
+ * @param {string} props.bgColor - background color of the button. it would be white(#FFFFFF) if it is not defined
+ * @param {string} props.hoveredBgColor - background color of the button when it is hovered. it would be black(#000) if it is not defined
+ * @param {string} props.onClick - any function that is called when the button is clicked
+ */
 const GradientButton:React.FC<GradientButtonProps> = (props) => {
     const [isHovered, setIsHovered] = useState(false);
     return(
         <>
             <StyledButton 
                 type={props.type}
-                onClick={props.onClick}
-                onMouseEnter={(e)=>setIsHovered(true)}
-                onMouseLeave={(e)=>setIsHovered(false)}
-                text={props.text} 
+                isDisabled={props.isDisabled}
+                onClick={props.isDisabled? undefined:props.onClick}
+                onMouseEnter={props.isDisabled? undefined:(e)=>setIsHovered(true)}
+                onMouseLeave={props.isDisabled? undefined:(e)=>setIsHovered(false)}
+                text={props.isDisabled && props.disabledText?props.disabledText:props.text} 
                 width={props.width}
                 padding={props.padding} 
                 border={props.border} 
