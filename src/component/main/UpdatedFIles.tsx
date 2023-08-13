@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import styled from '@emotion/styled'
-import * as Type from '../../Type';
+import styled from '@emotion/styled';
 import theme from '../../theme';
+import * as Type from '../../Type';
+import { Status } from './index';
 
 
 interface UpdatedFileProps {
-    file: File;
+    file: Type.File;
     key: number;
     isLast: boolean;
 }
@@ -14,16 +15,18 @@ interface FileDivProps {
     isLast: boolean;
 };
 const FileDiv = styled('div')<FileDivProps>`
-    width: 100%;
+    width: 90%;
     height: 3rem;
     padding: 0.5rem 0;
     border-bottom: ${props=>props.isLast? 'none': '1px solid' + theme.colors.border};
 `;
-
+const FileInfoDiv = styled('div')`
+    width: calc(100% - )
+`;
 const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
     return(
         <FileDiv isLast={props.isLast}>
-
+            <Status size={'3rem'} file={props.file} onClick={()=>{}}/>
         </FileDiv>
     )
 };

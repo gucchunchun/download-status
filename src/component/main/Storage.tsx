@@ -10,7 +10,7 @@ interface ContainerDivProps {
     height?: string;
 }
 const ContainerDiv = styled('div')<ContainerDivProps>`
-    width: 22rem;
+    width: 90%;
     height: ${props=>props.height || '25%'};
 `;
 const TitleH2 = styled('h2')`
