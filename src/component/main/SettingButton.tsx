@@ -94,7 +94,7 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
                         text={'back'}
                         isDisabled={false}
                         bgColor={`rgb(${theme.colors.primary})`}
-                        hoveredBgColor={`rgb(${theme.colors.textPrimary})`}
+                        hoveredBgColor={`rgb(${theme.colors.border})`}
                         textColor={`rgb(${theme.colors.textPrimary})`}
                         hoveredTextColor={`rgb(${theme.colors.primary})`}
                         onClick={handleClick}

@@ -10,7 +10,7 @@ import { GradientButton } from '../index';
 
 interface MainContainerProps {
     files: Type.File[];
-    used: (number|null);
+    used: number;
     menuOpenOnClick: () => void;
     statusOnClick: (status: Type.Status, index:number) => void;
     deleteOnClick: (index:number) => void;

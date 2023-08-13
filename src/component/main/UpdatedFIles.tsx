@@ -25,6 +25,7 @@ const ContainerDiv = styled('div')<ContainerDivProps>`
 `;
 
 const UpdatedFiles:React.FC<UpdatedFilesProps> = (props) => {
+    console.log(props.files)
     return(
         <ContainerDiv>
             {props.files.length===0?

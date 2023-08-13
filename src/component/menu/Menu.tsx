@@ -8,7 +8,7 @@ interface MenuProps {
     file: Type.File;
     index: number;
     used: number;
-    onClick: Function;
+    updateOnClick: (index:number)=>void;
 }
 
 const ContainerDiv = styled('div')`
@@ -21,7 +21,7 @@ const ContainerDiv = styled('div')`
 `;
 
 const FileInfoDiv = styled('div')`
-    width: fit-content;
+    width: 70%;
     height: 100%;
     display: flex;
     justify-content: start;
@@ -33,42 +33,37 @@ interface IconProps {
 const Icon = styled('div')<IconProps>`
     height: 100%;
     aspect-ratio: 1;
-    background-image: url(${props=>props.icon?props.icon as string :'/img/fileIcon.svg'});
+    background-image: url(${props=>props.icon?props.icon :'/img/fileIcon.svg'});
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: center;
 `;
 const FileNameH5 = styled('h5')`
-    width: fit-content;
+    width: 30%;
     margin: 0 1rem;
 `;
 const FileSizeP = styled('p')`
     width: fit-content;
 `;
 const Menu:React.FC<MenuProps> = (props) => {
-    const [isAvailable, setIsAvailable] = useState<boolean>(true);
-    useEffect(() => {
-        if (1000<props.used+props.file.size){
-            setIsAvailable(false);
-        }else {
-            setIsAvailable(true);
-        }
-    },[props]);
+    const lack = useMemo(()=>props.used + props.file.size - 1000, [props.file, props.used])
     return(
         <ContainerDiv>
             <FileInfoDiv>
                 <Icon icon={props.file.icon}/>
                 <FileNameH5>{props.file.filename}</FileNameH5>
-                <FileSizeP>{isAvailable? props.file.size+"MG":"lack of " + Math.abs(1000-props.used-props.file.size)+"MG"}</FileSizeP>
+                <FileSizeP>{lack<=0? props.file.size+"MG":"lack of " + lack +"MG"}</FileSizeP>
             </FileInfoDiv>
             <GradientButton 
                 text={'update'} 
-                isDisabled={isAvailable? false: true} 
+                isDisabled={lack<=0? false: true} 
                 disabledText={'not available'}
                 bgColor={`rgb(${theme.colors.primary})`} 
                 hoveredBgColor={`rgb(${theme.colors.resolve})`} 
                 textColor={`rgb(${theme.colors.textPrimary})`}
-                hoveredTextColor={`rgb(${theme.colors.primary})`}/>
+                hoveredTextColor={`rgb(${theme.colors.primary})`}
+                onClick={()=>props.updateOnClick(props.index)}
+                width={'6rem'}/>
         </ContainerDiv>
     )
 };

@@ -4,7 +4,7 @@ import theme from '../../theme';
 import * as Type from '../../Type';
 
 interface StorageProps {
-    used: (number|null);
+    used: (number);
     height?: string;
 }
 interface ContainerDivProps {
@@ -54,7 +54,7 @@ const Storage:React.FC<StorageProps> = (props) => {
             <MeterDiv>
                 <UsedMeterDiv used={props.used}/>
             </MeterDiv>
-            <UsageInfoP>{props.used===1000? '1GB': props.used + 'MG'} MB / 1GB</UsageInfoP>
+            <UsageInfoP>{props.used===1000? '1GB': props.used + 'MG'} / 1GB</UsageInfoP>
         </ContainerDiv>
     );
 };
