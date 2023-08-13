@@ -2,13 +2,15 @@ import React, { useState, useEffect, useMemo, useRef} from 'react';
 import styled from '@emotion/styled';
 import theme from '../../theme';
 import * as Type from '../../Type';
-import { Status } from './index';
+import { Status, SettingButton } from './index';
 
 
 interface UpdatedFileProps {
     file: Type.File;
     key: number;
     isLast: boolean;
+    onStatusClick:any;
+    deleteFile:any;
 }
 
 interface FileDivProps {
@@ -26,6 +28,10 @@ const FileDiv = styled('div')<FileDivProps>`
 `;
 const FileInfoDiv = styled('div')`
     width: 50%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
 `;
 const FileNameH5 = styled('h5')`
     color: ${theme.colors.textPrimary}
@@ -39,19 +45,22 @@ const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
     
     return(
         <FileDiv isLast={props.isLast} ref={FileDivRef}>
-            <Status file={props.file} onClick={()=>{}}/>
+            <Status file={props.file} onClick={props.onStatusClick}/>
             <FileInfoDiv>
                 <FileNameH5>{props.file.filename}</FileNameH5>
                 <FileStatusP>
                     {props.file.status.status as string + ' ' + props.file.status.completed + '%'}
                 </FileStatusP>
             </FileInfoDiv>
+            <SettingButton deleteFile={props.deleteFile}/>
         </FileDiv>
     )
 };
 
 interface UpdatedFilesProps {
     files: Type.File[];
+    onStatusClick:any;
+    deleteFile:any;
     height?: string;
 };
 interface ContainerDivProps {
@@ -59,7 +68,7 @@ interface ContainerDivProps {
 };
 const ContainerDiv = styled('div')<ContainerDivProps>`
     width: 90%;
-    height: ${props=>props.height || '35%'};
+    height: ${props=>props.height || '15rem'};
     display: flex;
     flex-direction: column;
     flexWrap: nowrap;
@@ -74,7 +83,9 @@ const UpdatedFiles:React.FC<UpdatedFilesProps> = (props) => {
                 return <UpdatedFile 
                             file={file} 
                             key={index} 
-                            isLast={index===props.files.length-1? true: false}/>
+                            isLast={index===props.files.length-1? true: false}
+                            onStatusClick={props.onStatusClick}
+                            deleteFile={props.deleteFile}/>
             })}
         </ContainerDiv>
     );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
+import theme from '../../theme';
 import * as Type from '../../Type';
 
 interface StorageProps {
@@ -11,7 +12,14 @@ interface ContainerDivProps {
 }
 const ContainerDiv = styled('div')<ContainerDivProps>`
     width: 90%;
-    height: ${props=>props.height || '25%'};
+    height: ${props=>props.height || '10rem'};
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(${theme.colors.primary});
+    border: 1px solid rgb(${theme.colors.border});
+    border-radius: 5px;
 `;
 const TitleH2 = styled('h2')`
     width: 100%;

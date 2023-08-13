@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 interface GradientButtonProps {
     text: string;
     type?: "button" | "submit" | "reset" ;
+    width?: string;
     padding?: string;
     textColor?: string;
     hoveredTextColor?: string;
@@ -15,6 +16,7 @@ interface GradientButtonProps {
 
 interface StyledButtonProps {
     text: string; 
+    width?: string;
     padding?: string;
     border?: string;
     backgroundColor?: string;
@@ -22,7 +24,7 @@ interface StyledButtonProps {
 const StyledButton = styled('button')<StyledButtonProps>`
     position: relative;
     overflow: hidden;
-    width: ${props=> props.text.length + 'rem'};
+    width: ${props=> props.width || props.text.length + 'rem'};
     height: 1rem;
     padding: ${props=>props.padding || '0.5em'};
     box-sizing: content-box;
@@ -73,6 +75,7 @@ const GradientButton:React.FC<GradientButtonProps> = (props) => {
                 onMouseEnter={(e)=>setIsHovered(true)}
                 onMouseLeave={(e)=>setIsHovered(false)}
                 text={props.text} 
+                width={props.width}
                 padding={props.padding} 
                 border={props.border} 
                 backgroundColor={props.bgColor}>
