@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
+import theme from '../../theme';
 
 interface DialogDivProps {
     width?: string;
@@ -18,6 +19,7 @@ const DialogDiv = styled('div')<DialogDivProps>`
     display: ${props => (props.disabled ? 'none' : 'block')};
     opacity: ${props => (props.disabled ? '0' : '1')};
     transition: opacity 0.3s, display 0.3s;
+    background-color: rgb(${theme.colors.primary});
 `;
 
 const Title = styled('h2')`
@@ -34,7 +36,6 @@ interface DialogProps {
     children?: React.ReactNode;
 }
 const Dialog:React.FC<DialogProps> = (props) => {
-    console.log(props.isDisabled);
     const [isDisabled, setIsDisabled] = useState(false);
     useEffect(() => {
         setIsDisabled(props.isDisabled);

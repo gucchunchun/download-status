@@ -9,7 +9,11 @@ import { GradientButton } from '../index';
 //TODO: add FUNC
 
 interface MainContainerProps {
-    used: (number|null);
+    files: Type.File[];
+    used: number;
+    menuOpenOnClick: () => void;
+    statusOnClick: (status: Type.Status, index:number) => void;
+    deleteOnClick: (index:number) => void;
 }
 
 interface ContainerProps {
@@ -34,13 +38,13 @@ const ContainerDiv = styled('div')<ContainerProps> `
 `;
 
 const MainContainer:React.FC<MainContainerProps> = (props) => {
-    const testFile:Type.File = {filename:'text', size:300, status: {status: Type.Status.Updating, completed:30}}
-    const testFile2:Type.File = {filename:'text', size:300, status: {status: Type.Status.Waiting, completed:0}}
-    const testFile3:Type.File = {filename:'text', size:300, status: {status: Type.Status.Pausing, completed:60}}
     return(
         <ContainerDiv used={props.used}>
             <Storage used={props.used} />
-            <UpdatedFiles files={[testFile, testFile2, testFile3]} onStatusClick={()=>{}} deleteFile={()=>{}}/>
+            <UpdatedFiles 
+                files={props.files} 
+                statusOnClick={props.statusOnClick} 
+                deleteOnClick={props.deleteOnClick}/>
             <GradientButton 
                 text={'update files'} 
                 isDisabled={false}
@@ -48,7 +52,8 @@ const MainContainer:React.FC<MainContainerProps> = (props) => {
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
                 border={`1px solid rgb(${theme.colors.border})`}
                 bgColor={`rgb(${theme.colors.primary})`} 
-                hoveredBgColor={`rgb(${theme.colors.resolve})`}  />
+                hoveredBgColor={`rgb(${theme.colors.resolve})`}
+                onClick={props.menuOpenOnClick}  />
         </ContainerDiv>
     );
 }

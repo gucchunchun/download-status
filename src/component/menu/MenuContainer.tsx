@@ -5,18 +5,15 @@ import * as Type from '../../Type';
 import { Menu } from './index';
 
 interface MenuContainerProps {
-    isOpen?: boolean;
-    menuOnClick?: React.MouseEventHandler;
-    statusOnClick?: Function;
-    isMenuOpen?: boolean;
     files: Type.File[];
     used: number;
-    deleteFile?: Function;
+    menuCloseOnClick: ()=>void;
+    updateOnClick: (index:number)=>void;
 }
 
 const ContainerDiv = styled('div')`
-    width: 22rem;
-    height: 22rem;
+    width: 25rem;
+    height: 25rem;
     padding: 1rem;
     position: absolute;
     top: 50%;
@@ -25,11 +22,13 @@ const ContainerDiv = styled('div')`
     border-radius: 5px;
     over-flow: scroll;
     background-color: rgb(${theme.colors.primary});
+    border: 1px solid rgb(${theme.colors.border});
+    border-radius: 5px;
 `;
 const CrossButton = styled('button')`
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0.25rem;
+    right: 0.25rem;
     width: 1rem;
     height: 1rem;
     &::before,
@@ -40,7 +39,7 @@ const CrossButton = styled('button')`
         left: 50%;
         translate: -50% -50%;
         width: 100%;
-        height: 5%;
+        height: 10%;
         background-color: rgb(${theme.colors.secondary});
     }
     &::before {
@@ -60,9 +59,14 @@ const MenuContainer:React.FC<MenuContainerProps> = (props) => {
     
     return(
         <ContainerDiv>
-            <CrossButton />
+            <CrossButton onClick={props.menuCloseOnClick} />
             {props.files.map((file, index)=>{
-                return <Menu file={file} key={index} index={index} used={props.used} onClick={()=>{}}></Menu>
+                return <Menu 
+                            file={file} 
+                            key={index} 
+                            index={index} 
+                            used={props.used} 
+                            updateOnClick={props.updateOnClick} />
             })}
         </ContainerDiv>
     );
