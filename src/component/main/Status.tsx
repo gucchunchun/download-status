@@ -3,32 +3,29 @@ import styled from '@emotion/styled'
 import * as Type from '../../Type';
 import theme from '../../theme';
 
+//TODO: resize!!!!!
 interface StatusProps {
-    size: string,
     file: Type.File,
     onClick: React.MouseEventHandler,
 }
 
 //  Styled component
 interface CompleteDivProps {
-    size: string,
     bg?: string,
 }
 //      https://developer.mozilla.org/en-US/docs/Web/CSS/Scaling_of_SVG_backgrounds
 const CompletedDiv = styled('div')<CompleteDivProps>`
-    width: ${props=> props.size};
-    height: ${props=> props.size};
+    height: 100%;
+    aspect-ratio: 1 / 1;
     background-image: url('${props => props.bg || "/img/complete.svg"}');
     background-size: 2.5rem 2.5rem;
     background-position: center;
     background-repeat: no-repeat;
 `;
-interface UpdatingButtonProps {
-    size: string,
-}
-const UpdatingButton = styled('button')<UpdatingButtonProps>`
-    width: ${props=> props.size};
-    height: ${props=> props.size};
+
+const UpdatingButton = styled('button')`
+    height: 100%;
+    aspect-ratio: 1 / 1;
 `;
 
 //  Canvas Functions
@@ -220,10 +217,9 @@ const Status:React.FC<StatusProps> = (props) => {
     return(
         <>
             {isCompleted?
-                <CompletedDiv size={props.size} bg={props.file.icon}></CompletedDiv>
+                <CompletedDiv bg={props.file.icon}></CompletedDiv>
                 :
                 <UpdatingButton 
-                    size={props.size} 
                     ref={UpdatingButtonRef} 
                     onClick={props.onClick}
                     onMouseEnter={()=>{
