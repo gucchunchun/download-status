@@ -65,41 +65,30 @@ const App:React.FC = () => {
         console.log(tempUpdatedFiles)
         setUpdatedFiles(tempUpdatedFiles);
         setAddFilesMenu(tempAddFilesMenu);
-        console.log(userData===null)
     },[files, userData])
     //change updatedFiles & addFilesMenu after deleting or updating files
     
     function changeFilesStatus(status:Type.Status, index:number):void {
-        switch (status) {
-            case Type.Status.Pausing as string:
-                setUpdatedFiles((prevFiles)=>{
-                    let new_updatedFiles = prevFiles.map((file,i)=>{
-                        if(i===index){
-                            file.status.status=Type.Status.Updating;
-                        } 
-                        return file;
-                    });
-                    return new_updatedFiles;
-                });
-                return;
-            default:
-                setUpdatedFiles((prevFiles)=>{
-                    let new_updatedFiles = prevFiles.map((file,i)=>{
-                        if(i===index){
-                            file.status.status=Type.Status.Pausing;
-                        } 
-                        return file;
-                    });
-                    return new_updatedFiles;
-                });
-                return;
-        };
+        setUpdatedFiles((prevFiles)=>{
+            return prevFiles.map((file, i) => {
+                if(i === index) {
+                    return {
+                        ...file,
+                        status: {
+                            ...file.status,
+                            status: status === Type.Status.Pausing ? Type.Status.Updating : Type.Status.Pausing
+                        }
+                    }
+                }
+                return file;
+            });
+        });
     }
     function deleteUpdatedFile(index:number):void {
         setUpdatedFiles((prevFiles)=>{
+            const deletedFile = prevFiles[index];
             setAddFilesMenu((prevAddFiles)=>{
-                prevAddFiles.push(prevFiles[index])
-                return prevAddFiles;
+                return [...prevAddFiles, deletedFile];
             });
             return prevFiles.filter((file, i)=>i !== index);
         })

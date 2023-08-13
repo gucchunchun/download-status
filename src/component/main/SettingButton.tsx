@@ -8,6 +8,14 @@ interface SettingButtonProps{
     deleteOnClick: () => void;
 }
 
+const ButtonsDiv = styled('div') `
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
 interface SettingOpenButtonProps {
     isHovered: boolean;
 }
@@ -19,7 +27,7 @@ const SettingOpenButton = styled('button')<SettingOpenButtonProps>`
     justify-content: center;
     align-items: center;
     transform: ${props=>props.isHovered? 'scale(0.95)': 'scale(1)'};
-    transition: all 0.2s ease-in;
+    transition: all 0.1s ease-in;
 `;
 
 const GearPath = styled('path')<SettingOpenButtonProps>`
@@ -28,6 +36,7 @@ const GearPath = styled('path')<SettingOpenButtonProps>`
     fill: rgb(${props=>props.isHovered? theme.colors.border : theme.colors.secondary});
     fill-opacity: 1;
 `;
+
 const SettingButton:React.FC<SettingButtonProps> = (props) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -59,21 +68,19 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
         props.deleteOnClick();
         handleClick();
     }
-    function handleMouseLeave2() {
+    function handleMouseLeave() {
         autoClose=setTimeout(() => {
             setIsOpen(false);
         }, 2000);
-        setIsOpen(false);
     }
-    function handleMouseEnter2() {
+    function handleMouseEnter() {
         clearTimeout(autoClose);
-        setIsOpen(true);
     }
     
     return(
         <>
             {isOpen?
-                <div className={"container"} onMouseEnter={handleMouseEnter2} onMouseLeave={handleMouseLeave2}>
+                <ButtonsDiv onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <GradientButton 
                         text={'delete'}
                         isDisabled={false}
@@ -81,7 +88,8 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
                         hoveredBgColor={`rgb(${theme.colors.reject})`}
                         textColor={`rgb(${theme.colors.textPrimary})`}
                         hoveredTextColor={`rgb(${theme.colors.primary})`}
-                        onClick={handleDeleteBClick}/>
+                        onClick={handleDeleteBClick}
+                        width={'70%'}/>
                     <GradientButton 
                         text={'back'}
                         isDisabled={false}
@@ -89,8 +97,9 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
                         hoveredBgColor={`rgb(${theme.colors.textPrimary})`}
                         textColor={`rgb(${theme.colors.textPrimary})`}
                         hoveredTextColor={`rgb(${theme.colors.primary})`}
-                        onClick={handleClick}/>
-                </div>
+                        onClick={handleClick}
+                        width={'70%'}/>
+                </ButtonsDiv>
                 :
                 <SettingOpenButton 
                     isHovered={isHovered} 

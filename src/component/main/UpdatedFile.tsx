@@ -33,13 +33,14 @@ const FileInfoDiv = styled('div')`
     flex-wrap: wrap;
 `;
 const FileNameH5 = styled('h5')`
-    color: ${theme.colors.textPrimary}
+    color: ${theme.colors.textPrimary};
     font-weight: bold;
 `;
 const FileStatusP = styled('p')`
-    color: ${theme.colors.textSecondary}
+    color: ${theme.colors.textSecondary};
 `;
 const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
+    
     const FileDivRef = useRef<HTMLDivElement|null>(null);
     
     return(

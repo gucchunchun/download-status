@@ -34,7 +34,6 @@ interface DialogProps {
     children?: React.ReactNode;
 }
 const Dialog:React.FC<DialogProps> = (props) => {
-    console.log(props.isDisabled);
     const [isDisabled, setIsDisabled] = useState(false);
     useEffect(() => {
         setIsDisabled(props.isDisabled);

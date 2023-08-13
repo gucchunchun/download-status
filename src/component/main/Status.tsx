@@ -116,7 +116,7 @@ class ResumeMark {
     }
 }
 const Status:React.FC<StatusProps> = (props) => {
-    const [isCompleted,setIsCompleted] = useState(false);
+    const [isCompleted, setIsCompleted] = useState<boolean>(props.file.status.status === Type.Status.Completed);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [waitingAngle, setWaitingAngle] = useState<number>(-Math.PI/2);
 
@@ -125,11 +125,13 @@ const Status:React.FC<StatusProps> = (props) => {
     const canvasRef = useRef< HTMLCanvasElement | null>(null);
     let statusDoughnut:Doughnut;
     useEffect(() => {
-        console.log(props.file.status.status);
-        if(props.file.status.status === Type.Status.Completed){
-            setIsCompleted(true);
+        if ((props.file.status.status === Type.Status.Completed)!==isCompleted) {
+            setIsCompleted(props.file.status.status === Type.Status.Completed);
             return;
         }
+        if(isCompleted) {
+            return;
+        };
         const button = UpdatingButtonRef.current;
         const canvas = canvasRef.current;
         if (!button) {
@@ -214,7 +216,7 @@ const Status:React.FC<StatusProps> = (props) => {
             }
         }
         animate();
-    },[isHovered, props]);
+    },[props, isHovered, isCompleted]);
 
     return(
         <>
