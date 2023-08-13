@@ -1,8 +1,12 @@
 export enum Status {
     Waiting = 'waiting',
     Updating = '',
-    Pause = 'pausing updating',
-    Complete = 'up to date',
+    Pausing = 'pausing updating',
+    Completed = 'up to date',
+}
+export interface StatusInfo {
+    status: Status,
+    completed: number,
 }
 
 export enum Icons {
@@ -16,11 +20,8 @@ export enum Icons {
 export interface File {
     filename: string,
     size: number,
-    status:{
-        status:Status,
-        completed:number
-    },
-    icon:Icons,
+    status:StatusInfo,
+    icon?:Icons,
 }
 export enum Gender {
     Male = 'male',
