@@ -76,6 +76,7 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
                 <div className={"container"} onMouseEnter={handleMouseEnter2} onMouseLeave={handleMouseLeave2}>
                     <GradientButton 
                         text={'delete'}
+                        isDisabled={false}
                         bgColor={`rgb(${theme.colors.primary})`}
                         hoveredBgColor={`rgb(${theme.colors.reject})`}
                         textColor={`rgb(${theme.colors.textPrimary})`}
@@ -83,6 +84,7 @@ const SettingButton:React.FC<SettingButtonProps> = (props) => {
                         onClick={handleDeleteBClick}/>
                     <GradientButton 
                         text={'back'}
+                        isDisabled={false}
                         bgColor={`rgb(${theme.colors.primary})`}
                         hoveredBgColor={`rgb(${theme.colors.textPrimary})`}
                         textColor={`rgb(${theme.colors.textPrimary})`}
