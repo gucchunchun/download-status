@@ -64,15 +64,16 @@ const App:React.FC = () => {
     
     return (
         <>
-        <Dialog isDisabled={userData===null?false:true}>
+        <Dialog isDisabled={true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
         <MainContainer used={200} />
-       <p>main contents</p>
       </>
     );
 } 
 export default App;
+
+{/* <Dialog isDisabled={userData===null?false:true}></Dialog> */}
 
 //   useEffect(() => {
 //     const intervalId = setInterval(() => {
