@@ -98,8 +98,8 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
                 value={pwd}
                 onChange={(e) => setPwd(e.target.value)}
             />
-            <GradientButton type='submit' text={isLogin? 'login': 'sign up'} />
-            <GradientButton type='button' onClick={handleToggleButton} text={isLogin? "sign up": "login"} />
+            <GradientButton type='submit' text={isLogin? 'login': 'sign up'} isDisabled={false} />
+            <GradientButton type='button' onClick={handleToggleButton} text={isLogin? "sign up": "login"} isDisabled={false}/>
         </form>
     )
 }

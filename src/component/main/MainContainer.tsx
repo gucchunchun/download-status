@@ -11,6 +11,7 @@ import { GradientButton } from '../index';
 interface MainContainerProps {
     used: (number|null);
 }
+
 interface ContainerProps {
     used: (number|null);
 }
@@ -23,7 +24,7 @@ const ContainerDiv = styled('div')<ContainerProps> `
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    filter: ${props=>props.used===null? 'blur(4px)': 'blur(0)'}
+    filter: ${props=>props.used===null? 'blur(4px)': 'blur(0)'};
     background-color: rgb(${theme.colors.primary});
     border: 1px solid rgb(${theme.colors.border});
     display: flex;
@@ -42,6 +43,7 @@ const MainContainer:React.FC<MainContainerProps> = (props) => {
             <UpdatedFiles files={[testFile, testFile2, testFile3]} onStatusClick={()=>{}} deleteFile={()=>{}}/>
             <GradientButton 
                 text={'update files'} 
+                isDisabled={false}
                 textColor={`rgb(${theme.colors.textPrimary})`} 
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
                 border={`1px solid rgb(${theme.colors.border})`}

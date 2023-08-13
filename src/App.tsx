@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import * as Type from './Type';
-import { AuthForm, Dialog, MainContainer } from './component/index';
+import { AuthForm, Dialog, MainContainer, MenuContainer } from './component/index';
 
 //TODO: 
 //dialog component => includes login page ??
@@ -62,12 +62,16 @@ const App:React.FC = () => {
     },[userData])
     //change updatedFiles & addFilesMenu after deleting or updating files
     
+    const testFile:Type.File = {filename:'text', size:300, status: {status: Type.Status.Updating, completed:30}}
+    const testFile2:Type.File = {filename:'text', size:300, status: {status: Type.Status.Waiting, completed:0}}
+    const testFile3:Type.File = {filename:'text', size:300, status: {status: Type.Status.Pausing, completed:60}}
     return (
         <>
         <Dialog isDisabled={true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
-        <MainContainer used={200} />
+        <MainContainer used={null} />
+        <MenuContainer used={200} files={[testFile, testFile2, testFile3]} />
       </>
     );
 } 

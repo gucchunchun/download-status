@@ -1,1 +1,1 @@
-export { default as MenuContainer } from './MenuContainer';
+export { default as Menu } from './Menu'
