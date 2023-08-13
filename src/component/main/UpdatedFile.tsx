@@ -6,7 +6,7 @@ import { Status, SettingButton } from './index';
 
 interface UpdatedFileProps {
     file: Type.File;
-    key: number;
+    index: number;
     isLast: boolean;
     statusOnClick: (status: Type.Status, index:number) => void;
     deleteOnClick: (index:number) => void;
@@ -44,14 +44,14 @@ const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
     
     return(
         <FileDiv isLast={props.isLast} ref={FileDivRef}>
-            <Status file={props.file} onClick={()=>props.statusOnClick(props.file.status.status, props.key)}/>
+            <Status file={props.file} onClick={()=>props.statusOnClick(props.file.status.status, props.index)}/>
             <FileInfoDiv>
                 <FileNameH5>{props.file.filename}</FileNameH5>
                 <FileStatusP>
-                    {props.file.status.status as string + ' ' + props.file.status.completed + '%'}
+                    {props.file.status.status + ' ' + props.file.status.completed + '%'}
                 </FileStatusP>
             </FileInfoDiv>
-            <SettingButton deleteOnClick={()=>props.deleteOnClick(props.key)}/>
+            <SettingButton deleteOnClick={()=>props.deleteOnClick(props.index)}/>
         </FileDiv>
     )
 };

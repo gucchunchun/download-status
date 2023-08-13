@@ -6,7 +6,7 @@ import { UpdatedFile } from './index';
 
 
 interface UpdatedFilesProps {
-    files: (Type.File[]|null);
+    files: Type.File[];
     statusOnClick: (status: Type.Status, index:number) => void;
     deleteOnClick: (index:number) => void;
     height?: string;
@@ -25,17 +25,17 @@ const ContainerDiv = styled('div')<ContainerDivProps>`
 `;
 
 const UpdatedFiles:React.FC<UpdatedFilesProps> = (props) => {
-    const files:(Type.File[]|null)=props.files;
     return(
         <ContainerDiv>
-            {files===null?
+            {props.files.length===0?
                 <p>no file is updated</p>
             :
-            files.map((file, index)=>{
+            props.files.map((file, index)=>{
                 return <UpdatedFile 
                             file={file} 
                             key={index} 
-                            isLast={index===files.length-1? true: false}
+                            index={index} 
+                            isLast={index===props.files.length-1? true: false}
                             statusOnClick={props.statusOnClick}
                             deleteOnClick={props.deleteOnClick}/>
             })

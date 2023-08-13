@@ -48,15 +48,21 @@ const App:React.FC = () => {
     useEffect(()=> {
         //type guarding
         if ( userData === null ) {
-            alert('ERROR: please login or sign up') 
             return;
         }
-        const tempUpdatedFiles = files.filter((file)=>
-            userData.data.updatedFiles.includes(file.filename)
-        );
+        const tempUpdatedFiles = files.filter((file)=>{
+            if(userData.data.updatedFiles.includes(file.filename)){
+                // file.status.status=Type.Status.Completed;
+                // file.status.completed = 100;
+                return true;
+            }else {
+                return false;
+            }
+        });
         const tempAddFilesMenu = files.filter((file)=>
             !userData.data.updatedFiles.includes(file.filename)
         );
+        console.log(tempUpdatedFiles)
         setUpdatedFiles(tempUpdatedFiles);
         setAddFilesMenu(tempAddFilesMenu);
         console.log(userData===null)
@@ -65,26 +71,26 @@ const App:React.FC = () => {
     
     function changeFilesStatus(status:Type.Status, index:number):void {
         switch (status) {
-            case Type.Status.Pausing:
-                setAddFilesMenu((prevFiles)=>{
-                    prevFiles.map((file,i)=>{
+            case Type.Status.Pausing as string:
+                setUpdatedFiles((prevFiles)=>{
+                    let new_updatedFiles = prevFiles.map((file,i)=>{
                         if(i===index){
                             file.status.status=Type.Status.Updating;
                         } 
                         return file;
                     });
-                    return prevFiles;
+                    return new_updatedFiles;
                 });
                 return;
             default:
-                setAddFilesMenu((prevFiles)=>{
-                    prevFiles.map((file,i)=>{
+                setUpdatedFiles((prevFiles)=>{
+                    let new_updatedFiles = prevFiles.map((file,i)=>{
                         if(i===index){
                             file.status.status=Type.Status.Pausing;
                         } 
                         return file;
                     });
-                    return prevFiles;
+                    return new_updatedFiles;
                 });
                 return;
         };
@@ -95,8 +101,7 @@ const App:React.FC = () => {
                 prevAddFiles.push(prevFiles[index])
                 return prevAddFiles;
             });
-            prevFiles.filter((file, i)=>i !== index);
-            return prevFiles;
+            return prevFiles.filter((file, i)=>i !== index);
         })
     }
     //onClick
@@ -105,9 +110,6 @@ const App:React.FC = () => {
     }
     return (
         <>
-        <Dialog isDisabled={true}>
-            <AuthForm handleLogin={handleLogin}/>
-        </Dialog>
         <MainContainer 
             files={updatedFiles} 
             used={used} 
@@ -119,6 +121,9 @@ const App:React.FC = () => {
         :
             null
         }
+        <Dialog isDisabled={userData===null?false: true}>
+            <AuthForm handleLogin={handleLogin}/>
+        </Dialog>
       </>
     );
 } 

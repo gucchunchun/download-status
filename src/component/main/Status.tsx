@@ -6,7 +6,7 @@ import theme from '../../theme';
 //TODO: resize!!!!!
 interface StatusProps {
     file: Type.File,
-    onClick: React.MouseEventHandler,
+    onClick: ()=>void;
 }
 
 //  Styled component
@@ -116,7 +116,7 @@ class ResumeMark {
     }
 }
 const Status:React.FC<StatusProps> = (props) => {
-    const [isCompleted,setIsCompleted] = useState(props.file.status.status === Type.Status.Completed);
+    const [isCompleted,setIsCompleted] = useState(false);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [waitingAngle, setWaitingAngle] = useState<number>(-Math.PI/2);
 
@@ -125,7 +125,9 @@ const Status:React.FC<StatusProps> = (props) => {
     const canvasRef = useRef< HTMLCanvasElement | null>(null);
     let statusDoughnut:Doughnut;
     useEffect(() => {
-        if(isCompleted) {
+        console.log(props.file.status.status);
+        if(props.file.status.status === Type.Status.Completed){
+            setIsCompleted(true);
             return;
         }
         const button = UpdatingButtonRef.current;
@@ -212,7 +214,7 @@ const Status:React.FC<StatusProps> = (props) => {
             }
         }
         animate();
-    },);
+    },[isHovered, props]);
 
     return(
         <>
