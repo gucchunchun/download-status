@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef} from 'react';
+import React, { useRef } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
 import * as Type from '../../Type';
@@ -17,13 +17,14 @@ interface FileDivProps {
 };
 const FileDiv = styled('div')<FileDivProps>`
     width: 100%;
-    height: 3rem;
-    margin-bottom: 5px;
+    height: 3.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: ${props=>props.isLast===true? 'none': '1px solid rgb(' + theme.colors.border + ')'};
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    border-bottom: ${props=>props.isLast===true? 'none': '1px solid rgb(' + theme.colors.border + ')'};
 `;
 const FileInfoDiv = styled('div')`
     width: 50%; 
@@ -31,13 +32,6 @@ const FileInfoDiv = styled('div')`
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-`;
-const FileNameH5 = styled('h5')`
-    color: ${theme.colors.textPrimary};
-    font-weight: bold;
-`;
-const FileStatusP = styled('p')`
-    color: ${theme.colors.textSecondary};
 `;
 const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
     
@@ -47,10 +41,10 @@ const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
         <FileDiv isLast={props.isLast} ref={FileDivRef}>
             <Status file={props.file} onClick={()=>props.statusOnClick(props.file.status.status, props.index)}/>
             <FileInfoDiv>
-                <FileNameH5>{props.file.filename}</FileNameH5>
-                <FileStatusP>
+                <h5>{props.file.filename}</h5>
+                <p>
                     {props.file.status.status + ' ' + props.file.status.completed + '%'}
-                </FileStatusP>
+                </p>
             </FileInfoDiv>
             <SettingButton deleteOnClick={()=>props.deleteOnClick(props.index)}/>
         </FileDiv>
