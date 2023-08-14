@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import * as Type from '../../Type';
 import { Storage, UpdatedFiles } from './index';
 import { GradientButton } from '../index';
@@ -20,7 +20,7 @@ interface ContainerProps {
     used: (number|null);
 }
 const ContainerDiv = styled('div')<ContainerProps> `
-    width: clamp(12.5rem, 50vw, 31.25rem);
+    width: clamp(17rem, 50vw, 28rem); 
     height: fit-content;
     padding: 1rem;
     border-radius: 0.5rem;

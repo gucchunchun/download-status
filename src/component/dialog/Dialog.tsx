@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 
 interface DialogDivProps {
     width?: string;

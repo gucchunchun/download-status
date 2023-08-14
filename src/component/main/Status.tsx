@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styled from '@emotion/styled'
 import * as Type from '../../Type';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 
 //TODO: resize!!!!!
 interface StatusProps {

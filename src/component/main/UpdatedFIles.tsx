@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styled from '@emotion/styled';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import * as Type from '../../Type';
 import { UpdatedFile } from './index';
 
@@ -17,11 +17,12 @@ interface ContainerDivProps {
 const ContainerDiv = styled('div')<ContainerDivProps>`
     width: 90%;
     height: ${props=>props.height || '15rem'};
+    padding: 0.5rem 0;
     display: flex;
     flex-direction: column;
     flexWrap: nowrap;
     justify-content: flex-start;
-    overflow: scroll;
+    overflow-y: scroll;
 `;
 
 const UpdatedFiles:React.FC<UpdatedFilesProps> = (props) => {
