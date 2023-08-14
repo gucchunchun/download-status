@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled'
 import * as Type from '../../Type';
 import theme from '../../styles/theme';
 
-//TODO: resize!!!!!
 interface StatusProps {
     file: Type.File,
     onClick: ()=>void;
