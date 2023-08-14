@@ -14,7 +14,7 @@ interface CompleteDivProps {
 }
 //      https://developer.mozilla.org/en-US/docs/Web/CSS/Scaling_of_SVG_backgrounds
 const CompletedDiv = styled('div')<CompleteDivProps>`
-    height: 100%;
+    width: 20%;
     aspect-ratio: 1 / 1;
     background-image: url('${props => props.bg || "/img/complete.svg"}');
     background-size: 2.5rem 2.5rem;
@@ -23,10 +23,12 @@ const CompletedDiv = styled('div')<CompleteDivProps>`
 `;
 
 const UpdatingButton = styled('button')`
+    width: 20%;
     height: 100%;
-    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
-
 //  Canvas Functions
 class Doughnut{
     private c: CanvasRenderingContext2D;
@@ -142,9 +144,9 @@ const Status:React.FC<StatusProps> = (props) => {
             return;
         }
         //prevent blur lines by doubling canvas size
-        canvas.setAttribute('width', (button.clientWidth * 2).toString());
+        canvas.setAttribute('width', (button.clientHeight * 2).toString());
         canvas.setAttribute('height', (button.clientHeight * 2).toString());
-        canvas.style.width = button.clientWidth  + 'px';
+        canvas.style.width = button.clientHeight  + 'px';
         canvas.style.height = button.clientHeight  + 'px';
 
         const width = canvas.clientWidth;
