@@ -1,141 +1,239 @@
-import React, {useState, useEffect} from 'react';
-import { CloudButton } from './component/CloudButton';
-import MainContainer from './component/MainContainer';
-import MenuContainer from './component/MenuContainer';
+import React, {useState, useEffect, useRef } from 'react';
+import * as Type from './Type';
+import { Global } from '@emotion/react';
+import globalStyles from './styles/globalStyles';
+import { AuthForm, MainContainer, MenuContainer, Header } from './component/index';
+import { Dialog } from './component/common/index';
 
-
-export interface File {
-    name: string;
-    status: (number|string);
-    size: number;
-    icon?:Icons;
-}
-const file1:File = {name: 'file1', status:"up to date", size: 200}
-const file2:File = {name: 'file2', status:30,size:300}
-const test:File[] = [
-    file1,
-    file2,
-];
-
-export enum Icons {
-    slack = "/img/slack.png",
-    facebook = "/img/facebook.png",
-    instagram = "/img/instagram.png",
-    discord = "/img/discord.png",
-    x = "/img/x.png",
-}
-export interface MenuFile extends File {
-    icon:Icons;
-}
-const FilesMenu =  [
-    {name: 'slack', status:"waiting", size:100, icon:Icons.slack},
-    {name: 'facebook', status:"waiting", size:200, icon:Icons.facebook},
-    {name: 'instagram', status:"waiting", size:150, icon:Icons.instagram},
-    {name: 'discord', status:"waiting", size:300, icon:Icons.discord},
-    {name: 'x', status:"waiting", size:600, icon:Icons.x},
-]
-
-export default function App() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [menu, updateMenu] = useState<MenuFile[]>(FilesMenu);
-    const [isMenuOpen, updateIsMenuOpen] = useState<boolean>(false);
-    const [files, updateFiles] = useState<File[]>(test);
-    const [used, updateUsed] = useState<number>(0);
-    const [willbeused, updateWillbeUsed] = useState<number>(0);
+const App:React.FC = () => {
+    const [dataIndex, setDataIndex] = useState<(number|null)>(null);
+    const [userData, setUserData] = useState<(Type.User|null)>(null);
+    const [files, setFiles] = useState<Type.File[]>([]);
+    const [updatedFiles, setUpdatedFiles] = useState<Type.File[]>([]);
+    const [addFiles, setAddFiles] = useState<Type.File[]>([]);
+    const [used, setUsed] = useState<number>(0);
+    const [willUsed, setWillUsed] = useState<number>(0);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [timeout, setNewTimeout] = useState<(NodeJS.Timeout|1|null)>(null);
+    const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
   
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        // Code to be executed on each interval tick
-        updateFiles((prevFiles) => {
-          const updatedFiles = prevFiles.map((file) => {
-            let updatedStatus = file.status;
-            if (typeof file.status === "string") {
-                if(file.status === "waiting" && Math.random() < 0.1){
-                    updatedStatus = 0;
+    //func to fakery update the file data too cloud
+    const newTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    useEffect(()=> {
+        if (timeout === null) {
+            return;
+            
+        }else {
+            clearTimeout(timeout);
+        }
+
+        const newTimeout = setTimeout(() =>{
+            let completedNum:number = 0;
+            const new_files:Type.File[] = updatedFiles.map((file)=> {
+                let new_status = file.status.status;
+                let new_completed = file.status.completed;
+                if ( (new_status === '' ) && (Math.random() < 0.2) ) {
+                    new_completed += 1;
+                }else if ( (new_status === '' ) && (Math.random() < 0.5) ) {
+                    new_completed += 2;
+                }else if ( (new_status === Type.Status.Waiting as string ) && (Math.random() < 0.1) )  {
+                    new_status = Type.Status.Updating;
+                }else if ( new_status === Type.Status.Completed ) {
+                    completedNum++;
                 }
-            }else if  (Math.random() < 0.2){
-                updatedStatus = file.status + 1;
-            }else if (Math.random() < 0.5){
-                updatedStatus = file.status + 2;
-            }
-            return {
-              ...file,
-              status: (typeof updatedStatus=="number"&&updatedStatus > 100) ? "up to date" : updatedStatus,
-            };
-          });
-          return updatedFiles;
-        });
-      }, 100); // Interval time in milliseconds (1000ms = 1 second)
-  
-      // Cleanup function to clear the interval when the component unmounts
-      return () => {
-        clearInterval(intervalId);
-      };
-    }, []);
-    useEffect(()=>{
-        updateUsed(()=>{
-            let new_used:number=0;
-            files.forEach((file) =>{
-                if (file.status === "up to date"){
-                    new_used += file.size;
+                if (new_completed >= 100) {
+                    new_status = Type.Status.Completed;
+                    new_completed = 100;
                 }
-            });
-            return new_used;
-        })
-        updateWillbeUsed(()=>{
-            let new_willbeused:number=0;
-            files.forEach((file) =>{
-                new_willbeused += file.size;
-            });
-            return new_willbeused;
-        });
-    },[files])
-    function handleButtonClick() {
-      setIsOpen((prevIsOpen) => !prevIsOpen);
-    }
-    function handleMenuButtonClick():void {
-        updateIsMenuOpen((prev)=>{
-            return !prev;
-        });
-    }
-    function handleMenuClick(installFile:MenuFile):void {
-        updateMenu((prev) => {
-            prev.splice(prev.indexOf(installFile),1);
-            return prev;
-        });
-        updateFiles((prev)=>{
-            prev.push(installFile);
-            return prev;
-        });
-    }
-    function handleStatusClick(clickedFile:(MenuFile|File)):void {
-        updateFiles((prev) => {
-            prev.forEach((file)=>{
-                if(file===clickedFile){
-                    if(typeof file.status==="number"){
-                        file.status="resume download from "+ file.status + "%";
-                    }else if(file.status.includes("resume download from ")){
-                        file.status=Number(file.status.slice(0, -1).replace("resume download from ", ""))
+                return {
+                    ...file,
+                    status: {
+                        status: new_status,
+                        completed: new_completed
                     }
                 }
             })
-            return prev;
+            if ( completedNum !== updatedFiles.length){
+                setUpdatedFiles(new_files);
+                setNewTimeout(newTimeout);
+            }
+        }, 200);
+        newTimeoutRef.current = newTimeout;
+
+        return(()=>{
+            if (timeout !== null) {
+                clearTimeout(timeout);
+              }
+              if ( newTimeoutRef.current !== null ) {
+                  clearTimeout(newTimeoutRef.current);
+              }
+        });
+    },[updatedFiles, timeout]);
+    function stop_fakeUpdate() {
+        if (timeout !== null) {
+          clearTimeout(timeout);
+        }
+        if ( newTimeoutRef.current !== null ) {
+            clearTimeout(newTimeoutRef.current);
+        }
+        setNewTimeout(null);
+    }
+    function start_fakeUpdate() {
+        setNewTimeout(1)
+    }
+
+    //once after mounting: get Files data
+    useEffect(() =>{
+        fetch('/api/files', {
+            method: 'GET',
+        })
+        .then((res)=>res.json())
+        .then((data:{files:Type.File[]})=>{
+            setFiles(data.files);
+        })
+        .catch((err)=>{
+            console.log(err);
+            //dialog is better?
+            //https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role
+            // alert('ERROR: please reload page again')
+            setTimeout(()=>{
+                window.location.reload();
+            },5000);
+        });
+
+        return(()=>{
+            fetch('/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userData, dataIndex })
+            })
+            .then((res)=>{
+                if(res.status === 401){
+                    return res.json().then((err) =>{
+                    throw new Error(err.message)});
+                }else {
+                    return res.json();
+                }})
+                .then((data)=>{
+                    console.log(data.message);
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+        })
+    }, []);
+    //set updated files & addFiles after userData & files are set
+    // can not be done in handleLogin because useState is asynchronous
+    useEffect(()=> {
+        //type guarding
+        if ( userData === null ) {
+            return;
+        }
+        setIsFormOpen(false);
+        const tempUpdatedFiles = files.filter((file)=>{
+            if(userData.data.updatedFiles.includes(file.filename)){
+                file.status.status = Type.Status.Completed;
+                file.status.completed = 100;
+                return true;
+            }else {
+                return false;
+            }
+        });
+        const tempAddFiles = files.filter((file)=>
+            !userData.data.updatedFiles.includes(file.filename)
+        );
+        setUpdatedFiles(tempUpdatedFiles);
+        setAddFiles(tempAddFiles);
+    },[files, userData])
+
+    //set userData
+    function handleLogin(index:number, user: Type.User) {
+        setDataIndex(index);
+        setUserData(user);
+    }
+    //change updatedFiles & addFiles after deleting or updating files  
+    function changeFilesStatus(status:Type.Status, index:number):void {
+        setUpdatedFiles((prevFiles)=>{
+            return prevFiles.map((file, i) => {
+                if(i === index) {
+                    return {
+                        ...file,
+                        status: {
+                            ...file.status,
+                            status: status === Type.Status.Pausing ? Type.Status.Updating : Type.Status.Pausing
+                        }
+                    }
+                }
+                return file;
+            });
         });
     }
-    function deleteFile(file:(MenuFile|File)):void {
-        if("icon" in file){
-            updateMenu((prev)=>[...prev, file as MenuFile]);
-        }
-        updateFiles((prev) => {
-            const new_files = prev.filter((prefile)=>prefile!==file);
-            return new_files
+    function deleteUpdatedFile(index:number):void {
+        setUpdatedFiles((prevFiles)=>{
+            const deletedFile = prevFiles[index];
+            setAddFiles((prevAddFiles)=>{
+                return [...prevAddFiles, deletedFile];
+            });
+            return prevFiles.filter((file, i)=>i !== index);
+        })
+    }
+    function addUpdateFile(index:number):void {
+        setAddFiles((prevAddFiles)=>{
+            const addFile = prevAddFiles[index];
+            setUpdatedFiles((prevFiles)=>{
+                return [...prevFiles, addFile];
+            });
+            return prevAddFiles.filter((file, i)=>i !== index);
         });
+    }
+    //used, willUsed
+    useEffect(()=>{
+        let tempUsed:number = 0;
+        let tempWillUsed:number = 0;
+        updatedFiles.forEach((file)=>{
+            if (file.status.status === Type.Status.Completed) {
+                tempUsed += file.size;
+            }
+            tempWillUsed += file.size;
+        })
+        setUsed(tempUsed);
+        setWillUsed(tempWillUsed);
+    },[updatedFiles]);
+
+    //onClick
+    function handleMenuOpenClick():void {
+        setIsMenuOpen((prev)=>!prev);
+    }
+    function handleFormOpenClick():void {
+        setIsFormOpen((prev)=>!prev);
     }
     return (
-      <React.StrictMode>
-        <CloudButton onClick={handleButtonClick} />
-        <MainContainer isOpen={isOpen} menuOnClick={handleMenuButtonClick} statusOnClick={handleStatusClick} deleteFile={deleteFile} isMenuOpen={isMenuOpen} files={files} used={used}/>
-        <MenuContainer  menuList={menu} used={willbeused} menuOnClick={handleMenuClick} crossOnClick={handleMenuButtonClick} isMenuOpen={isMenuOpen} />
-      </React.StrictMode>
+        <>
+        <Global styles={globalStyles} />
+        {userData?<Header isFormOpen={isFormOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
+        <MainContainer 
+            files={updatedFiles} 
+            used={used} 
+            menuOpenOnClick={handleMenuOpenClick}
+            statusOnClick={changeFilesStatus}
+            deleteOnClick={deleteUpdatedFile}/>
+        {isMenuOpen?
+            <MenuContainer 
+                files={addFiles}
+                used={willUsed} 
+                menuCloseOnClick={handleMenuOpenClick} 
+                updateOnClick={addUpdateFile} />
+        :
+            null
+        }
+        <Dialog isDisabled={isFormOpen?false: true}>
+            <AuthForm handleLogin={handleLogin}/>
+        </Dialog>
+      </>
     );
-  } 
+} 
+export default App;
+
+
