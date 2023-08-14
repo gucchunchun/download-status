@@ -123,7 +123,7 @@ const Status:React.FC<StatusProps> = (props) => {
     //when it is being uploaded
     const UpdatingButtonRef = useRef< HTMLButtonElement | null >(null);
     const canvasRef = useRef< HTMLCanvasElement | null>(null);
-    let statusDoughnut:Doughnut;
+    const statusDoughnutRef = useRef< Doughnut|null >(null);
     useEffect(() => {
         if ((props.file.status.status === Type.Status.Completed)!==isCompleted) {
             setIsCompleted(props.file.status.status === Type.Status.Completed);
@@ -156,16 +156,17 @@ const Status:React.FC<StatusProps> = (props) => {
             console.log('Canvas context is not available');
             return;
         }
-
+        let animationFrameId:number;
         if(props.file.status.status === Type.Status.Pausing) {
             let completed = props.file.status.completed;
             const angle = Math.PI*2 * completed/100;
-            statusDoughnut = new Doughnut(c, width, height, width*2/3, width/2, angle);
+            const statusDoughnut = new Doughnut(c, width, height, width*2/3, width/2, angle);
+            statusDoughnutRef.current = statusDoughnut;
             let statusResumeMark = new ResumeMark(c, width, height);
             statusDoughnut.draw();
             statusResumeMark.draw();
             let animate = () => {
-                requestAnimationFrame(animate);
+                animationFrameId = requestAnimationFrame(animate);
                 let animateC = c as CanvasRenderingContext2D;
                 animateC.clearRect(0, 0, width*2, height*2);
 
@@ -177,16 +178,17 @@ const Status:React.FC<StatusProps> = (props) => {
                 }
                 statusResumeMark.draw();
             }
-            animate();
+            animationFrameId = requestAnimationFrame(animate);
             return;
         };
         if(props.file.status.status === Type.Status.Waiting) {
             const angle = Math.PI/12;
-            statusDoughnut = new Doughnut(c, width, height, width*2/3, width/2, angle, waitingAngle);
+            const statusDoughnut = new Doughnut(c, width, height, width*2/3, width/2, angle, waitingAngle);
+            statusDoughnutRef.current = statusDoughnut;
             let statusPauseMark = new PauseMark(c, width, height);
             statusDoughnut.draw();
             let animate = () => {
-                requestAnimationFrame(animate);
+                animationFrameId = requestAnimationFrame(animate);
                 let animateC = c as CanvasRenderingContext2D;
                 animateC.clearRect(0, 0, width*2, height*2);
     
@@ -195,17 +197,18 @@ const Status:React.FC<StatusProps> = (props) => {
                     statusPauseMark.draw();
                 }
             }
-            animate();
+            animationFrameId = requestAnimationFrame(animate);
             return;
         }
         let completed = props.file.status.completed;
         const angle = Math.PI*2 * completed/100;
-        statusDoughnut = new Doughnut(c, width, height, width*2/3, width/2, angle);
+        const statusDoughnut = new Doughnut(c, width, height, width*2/3, width/2, angle);
+        statusDoughnutRef.current = statusDoughnut;
         let statusPauseMark = new PauseMark(c, width, height);
         statusDoughnut.draw();
         statusPauseMark.draw();
         let animate = () => {
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
             let animateC = c as CanvasRenderingContext2D;
             animateC.clearRect(0, 0, width*2, height*2);
 
@@ -215,8 +218,12 @@ const Status:React.FC<StatusProps> = (props) => {
                 statusPauseMark.draw();
             }
         }
-        animate();
-    },[props, isHovered, isCompleted]);
+        animationFrameId = requestAnimationFrame(animate);
+
+        return((()=>{
+            cancelAnimationFrame(animationFrameId);
+        }))
+    },[props, isHovered, isCompleted, waitingAngle]);
 
     return(
         <>
@@ -227,14 +234,14 @@ const Status:React.FC<StatusProps> = (props) => {
                     ref={UpdatingButtonRef} 
                     onClick={props.onClick}
                     onMouseEnter={()=>{
-                        if (statusDoughnut) {
-                            setWaitingAngle(statusDoughnut.startAngle);
+                        if (statusDoughnutRef.current !== null) {
+                            setWaitingAngle(statusDoughnutRef.current.startAngle);
                         }
                         setIsHovered(true)
                         }} 
                     onMouseLeave={()=>{
-                        if (statusDoughnut) {
-                            setWaitingAngle(statusDoughnut.startAngle);
+                        if (statusDoughnutRef.current !== null) {
+                            setWaitingAngle(statusDoughnutRef.current.startAngle);
                         }
                         setIsHovered(false)
                         }}>
