@@ -35,10 +35,8 @@ const FileInfoDiv = styled('div')`
 `;
 const UpdatedFile:React.FC<UpdatedFileProps> = (props) => {
     
-    const FileDivRef = useRef<HTMLDivElement|null>(null);
-    
     return(
-        <FileDiv isLast={props.isLast} ref={FileDivRef}>
+        <FileDiv isLast={props.isLast}>
             <Status file={props.file} onClick={()=>props.statusOnClick(props.file.status.status, props.index)}/>
             <FileInfoDiv>
                 <h5>{props.file.filename}</h5>

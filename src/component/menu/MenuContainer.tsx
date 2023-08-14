@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme'
 import * as Type from '../../Type';
-import { Menu } from './index';
+import { MenuFile } from './index';
 
 interface MenuContainerProps {
     files: Type.File[];
@@ -12,18 +12,17 @@ interface MenuContainerProps {
 }
 
 const ContainerDiv = styled('div')`
-    width: 25rem;
-    height: 25rem;
-    padding: 1rem;
     position: absolute;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    border-radius: 5px;
-    over-flow: scroll;
+    width: 20rem;
+    height: 20rem;
+    padding: 1rem;
     background-color: rgb(${theme.colors.primary});
     border: 1px solid rgb(${theme.colors.border});
     border-radius: 5px;
+    overflow-y: scroll;
 `;
 const CrossButton = styled('button')`
     position: absolute;
@@ -39,8 +38,9 @@ const CrossButton = styled('button')`
         left: 50%;
         translate: -50% -50%;
         width: 100%;
-        height: 10%;
+        height: 3px;
         background-color: rgb(${theme.colors.secondary});
+        border-radius: 5px;
     }
     &::before {
         transform: rotate(45deg);
@@ -61,11 +61,12 @@ const MenuContainer:React.FC<MenuContainerProps> = (props) => {
         <ContainerDiv>
             <CrossButton onClick={props.menuCloseOnClick} />
             {props.files.map((file, index)=>{
-                return <Menu 
+                return <MenuFile 
                             file={file} 
                             key={index} 
                             index={index} 
                             used={props.used} 
+                            isLast={index === props.files.length-1}
                             updateOnClick={props.updateOnClick} />
             })}
         </ContainerDiv>
