@@ -1,36 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import * as Type from './Type';
-import { AuthForm, Dialog, MainContainer, MenuContainer } from './component/index';
-
-
-//   useEffect(() => {
-//     const intervalId = setInterval(() => {
-//       // Code to be executed on each interval tick
-//       setFiles((prevFiles) => {
-//         const setdFiles = prevFiles.map((file) => {
-//           let setdStatus = file.status;
-//           if (typeof file.status === "string") {
-//               if(file.status === "waiting" && Math.random() < 0.1){
-//                   setdStatus = 0;
-//               }
-//           }else if  (Math.random() < 0.2){
-//               setdStatus = file.status + 1;
-//           }else if (Math.random() < 0.5){
-//               setdStatus = file.status + 2;
-//           }
-//           return {
-//             ...file,
-//             status: (typeof setdStatus=="number"&&setdStatus > 100) ? "up to date" : setdStatus,
-//           };
-//         });
-//         return setdFiles;
-//       });
-//     }, 100); // Interval time in milliseconds (1000ms = 1 second)
-
-
-
-
-
+import { Global } from '@emotion/react';
+import globalStyles from './styles/globalStyles';
+import { AuthForm, Dialog, MainContainer, MenuContainer, FakeUpdateButton } from './component/index';
 
 const App:React.FC = () => {
     const [dataIndex, setDataIndex] = useState<(number|null)>(null);
@@ -41,12 +13,73 @@ const App:React.FC = () => {
     const [used, setUsed] = useState<number>(0);
     const [willUsed, setWillUsed] = useState<number>(0);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const [timeout, setNewTimeout] = useState<(NodeJS.Timeout|1|null)>(null);
   
-    //set userData
-    function handleLogin(index:number, user: Type.User) {
-        setDataIndex(index);
-        setUserData(user);
+    //func to fakery update the file data too cloud
+    const newTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    useEffect(()=> {
+        if (timeout === null) {
+            return;
+            
+        }else {
+            clearTimeout(timeout);
+        }
+
+        const newTimeout = setTimeout(() =>{
+            let completedNum:number = 0;
+            const new_files:Type.File[] = updatedFiles.map((file)=> {
+                let new_status = file.status.status;
+                let new_completed = file.status.completed;
+                if ( (new_status === '' ) && (Math.random() < 0.2) ) {
+                    new_completed += 1;
+                }else if ( (new_status === '' ) && (Math.random() < 0.5) ) {
+                    new_completed += 2;
+                }else if ( (new_status === Type.Status.Waiting as string ) && (Math.random() < 0.1) )  {
+                    new_status = Type.Status.Updating;
+                }else if ( new_status === Type.Status.Completed ) {
+                    completedNum++;
+                }
+                if (new_completed >= 100) {
+                    new_status = Type.Status.Completed;
+                    new_completed = 100;
+                }
+                return {
+                    ...file,
+                    status: {
+                        status: new_status,
+                        completed: new_completed
+                    }
+                }
+            })
+            if ( completedNum !== updatedFiles.length){
+                setUpdatedFiles(new_files);
+                setNewTimeout(newTimeout);
+            }
+        }, 200);
+        newTimeoutRef.current = newTimeout;
+
+        return(()=>{
+            if (timeout !== null) {
+                clearTimeout(timeout);
+              }
+              if ( newTimeoutRef.current !== null ) {
+                  clearTimeout(newTimeoutRef.current);
+              }
+        });
+    },[updatedFiles, timeout]);
+    function stop_fakeUpdate() {
+        if (timeout !== null) {
+          clearTimeout(timeout);
+        }
+        if ( newTimeoutRef.current !== null ) {
+            clearTimeout(newTimeoutRef.current);
+        }
+        setNewTimeout(null);
     }
+    function start_fakeUpdate() {
+        setNewTimeout(1)
+    }
+
     //once after mounting: get Files data
     useEffect(() =>{
         fetch('/api/files', {
@@ -88,6 +121,12 @@ const App:React.FC = () => {
         setUpdatedFiles(tempUpdatedFiles);
         setAddFiles(tempAddFiles);
     },[files, userData])
+
+    //set userData
+    function handleLogin(index:number, user: Type.User) {
+        setDataIndex(index);
+        setUserData(user);
+    }
     //change updatedFiles & addFiles after deleting or updating files  
     function changeFilesStatus(status:Type.Status, index:number):void {
         setUpdatedFiles((prevFiles)=>{
@@ -142,6 +181,7 @@ const App:React.FC = () => {
     }
     return (
         <>
+        <Global styles={globalStyles} />
         <MainContainer 
             files={updatedFiles} 
             used={used} 
@@ -157,6 +197,7 @@ const App:React.FC = () => {
         :
             null
         }
+        <FakeUpdateButton startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>
         <Dialog isDisabled={userData===null?false: true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
@@ -165,5 +206,4 @@ const App:React.FC = () => {
 } 
 export default App;
 
-{/* <Dialog isDisabled={userData===null?false:true}></Dialog> */}
 

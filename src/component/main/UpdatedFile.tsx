@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef} from 'react';
 import styled from '@emotion/styled';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import * as Type from '../../Type';
 import { Status, SettingButton } from './index';
 
@@ -17,7 +17,7 @@ interface FileDivProps {
 };
 const FileDiv = styled('div')<FileDivProps>`
     width: 100%;
-    height: 30%;
+    height: 3rem;
     margin-bottom: 5px;
     display: flex;
     flex-direction: row;
