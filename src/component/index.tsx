@@ -3,3 +3,4 @@ export { default as Dialog } from './dialog/Dialog';
 export { default as GradientButton } from './buttons/GradientButton';
 export { default as MainContainer } from './main/MainContainer';
 export { default as MenuContainer } from './menu/MenuContainer';
+export { default as FakeUpdateButton } from './FakeUpdateButton';
