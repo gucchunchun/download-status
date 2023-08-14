@@ -39,7 +39,7 @@ const App:React.FC = () => {
                     new_completed += 1;
                 }else if ( (new_status === '' ) && (Math.random() < 0.5) ) {
                     new_completed += 2;
-                }else if ( (new_status === Type.Status.Waiting as string ) && (Math.random() < 0.2) )  {
+                }else if ( (new_status === Type.Status.Waiting as string ) && (Math.random() < 0.1) )  {
                     new_status = Type.Status.Updating;
                 }else if ( new_status === Type.Status.Completed ) {
                     completedNum++;
@@ -60,7 +60,7 @@ const App:React.FC = () => {
                 setUpdatedFiles(new_files);
                 setNewTimeout(newTimeout);
             }
-        }, 100);
+        }, 200);
         newTimeoutRef.current = newTimeout;
 
         return(()=>{

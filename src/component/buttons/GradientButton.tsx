@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
 interface GradientButtonProps {
@@ -86,6 +86,9 @@ const StyledSpan = styled('span')<StyledSpanProps>`
  */
 const GradientButton:React.FC<GradientButtonProps> = (props) => {
     const [isHovered, setIsHovered] = useState(false);
+    useEffect(()=>{
+        setIsHovered(false);
+    },[props.isDisabled]);
     return(
         <>
             <StyledButton 
