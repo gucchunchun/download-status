@@ -2,7 +2,8 @@ import React, {useState, useEffect, useRef } from 'react';
 import * as Type from './Type';
 import { Global } from '@emotion/react';
 import globalStyles from './styles/globalStyles';
-import { AuthForm, Dialog, MainContainer, MenuContainer, FakeUpdateButton } from './component/index';
+import { AuthForm, MainContainer, MenuContainer, FakeUpdateButton } from './component/index';
+import { Dialog } from './component/common/index';
 
 const App:React.FC = () => {
     const [dataIndex, setDataIndex] = useState<(number|null)>(null);

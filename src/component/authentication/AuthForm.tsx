@@ -110,6 +110,7 @@ const ToggleP = styled('p')`
                 value={id} 
                 type={'text'} 
                 label={'ID'} 
+                inputTextSize={'0.8rem'}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>setId(e.target.value)}
                  />
             <Form.MyInput 
@@ -118,7 +119,8 @@ const ToggleP = styled('p')`
                 value={pwd} 
                 type={'password'} 
                 label={'Password'} 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>setId(e.target.value)}
+                inputTextSize={'0.8rem'}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>setPwd(e.target.value)}
                  />
             <ToggleDiv>
                 <ToggleP>{isLogin? 'you don\'t have account?':'do you have account?'}</ToggleP>

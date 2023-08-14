@@ -1,4 +1,4 @@
-import React  from 'react';
+import React, { ChangeEventHandler }  from 'react';
 import styled from '@emotion/styled';
 import theme from '../../../styles/theme';
 
@@ -11,10 +11,11 @@ interface MyInputProps {
     label?: string
     width?: string;
     height?: string;
-    textWidth?: string;
-    textHeight?: string;
-    textSize?: string;
-    onChange?: Function;
+    inputWidth?: string;
+    inputHeight?: string;
+    inputTextSize?: string;
+    labelTextSize?: string;
+    onChange?: ChangeEventHandler;
 }
 
 interface StyledDivProps {
@@ -48,13 +49,17 @@ const StyledInput = styled('input')<StyledInputProps>`
 const MyInput:React.FC<MyInputProps> = (props) => {
     return(
         <StyledDiv>
-            {props.label?<StyledLabel htmlFor={props.id}>{props.label}</StyledLabel>:null}
+            {props.label?<StyledLabel htmlFor={props.id} textSize={props.labelTextSize}>{props.label}</StyledLabel>:null}
             <StyledInput
                 id={props.id}
                 name={props.name}
                 value={props.value}
                 type={props.type}
-                placeholder={props.placeholder||''}/>
+                placeholder={props.placeholder||''}
+                width={props.inputWidth}
+                height={props.inputHeight}
+                textSize={props.inputTextSize}
+                onChange={props.onChange}/>
         </StyledDiv>
     );
 };

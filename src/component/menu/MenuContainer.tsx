@@ -18,7 +18,7 @@ const ContainerDiv = styled('div')`
     translate: -50% -50%;
     width: 20rem;
     height: 20rem;
-    padding: 1rem;
+    padding: 2rem;
     background-color: rgb(${theme.colors.primary});
     border: 1px solid rgb(${theme.colors.border});
     border-radius: 5px;
