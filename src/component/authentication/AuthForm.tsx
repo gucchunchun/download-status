@@ -131,7 +131,16 @@ const ToggleP = styled('p')`
                     hoveredTextColor={`rgb(${theme.colors.resolve})`} 
                     onClick={handleToggleButton}/>
             </ToggleDiv>
-            <Button.GradientButton type='submit' text={isLogin? 'login': 'sign up'} isDisabled={false} />
+            <Button.GradientButton 
+                type='submit' 
+                text={isLogin? 'login': 'sign up'} 
+                isDisabled={false}
+                width={'5rem'} 
+                textColor={`rgb(${theme.colors.textPrimary})`} 
+                hoveredTextColor={`rgb(${theme.colors.primary})`} 
+                hoveredBgColor={`rgb(${theme.colors.textPrimary})`}
+                border={`1px solid rgb(${theme.colors.border})`}
+                />
         </StyledForm>
     )
 }

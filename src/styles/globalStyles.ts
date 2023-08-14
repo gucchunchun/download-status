@@ -8,7 +8,7 @@ const globalStyles = css`
         background-color: rgb(${theme.colors.bg});
         margin: 0;
         padding: 0;
-        color: rgb(${theme.colors.textPrimary}));
+        color: rgb(${theme.colors.textPrimary});
     }
     h1 {
         font-size: 3.052rem;

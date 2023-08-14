@@ -1,6 +1,4 @@
-import React, { useRef } from 'react';
-import styled from '@emotion/styled';
-import theme from '../../styles/theme';
+import React from 'react';
 import * as Type from '../../Type';
 import { Status, SettingButton } from './index';
 import { File } from '../common/index';

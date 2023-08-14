@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef } from 'react';
 import * as Type from './Type';
 import { Global } from '@emotion/react';
 import globalStyles from './styles/globalStyles';
-import { AuthForm, MainContainer, MenuContainer, FakeUpdateButton } from './component/index';
+import { AuthForm, MainContainer, MenuContainer, Header } from './component/index';
 import { Dialog } from './component/common/index';
 
 const App:React.FC = () => {
@@ -206,9 +206,13 @@ const App:React.FC = () => {
     function handleMenuOpenClick():void {
         setIsMenuOpen((prev)=>!prev);
     }
+    function handleFormOpenClick():void {
+        setIsFormOpen((prev)=>!prev);
+    }
     return (
         <>
         <Global styles={globalStyles} />
+        {userData?<Header isFormOpen={isFormOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
         <MainContainer 
             files={updatedFiles} 
             used={used} 
@@ -224,7 +228,6 @@ const App:React.FC = () => {
         :
             null
         }
-        <FakeUpdateButton startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>
         <Dialog isDisabled={isFormOpen?false: true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>

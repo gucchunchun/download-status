@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme'
 import * as Type from '../../Type';

@@ -14,6 +14,7 @@ interface HeaderProps {
 const ContainerDiv = styled('div')`
     width: 100%;
     height: 4rem;
+    padding: 0 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,10 +26,11 @@ const Header:React.FC<HeaderProps> = (props) => {
             <Button.GradientButton
                 text={isStop?'stop': 'start'}
                 isDisabled={false}
+                width={'7rem'}
                 textColor={`rgb(${theme.colors.textPrimary})`} 
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
                 hoveredBgColor={`rgb(${theme.colors.secondary})`}
-                border={`rgb(${theme.colors.border})`}
+                border={`1px solid rgb(${theme.colors.border})`}
                 onClick={isStop? 
                             ()=>{
                                 props.stopFunc();
@@ -39,21 +41,14 @@ const Header:React.FC<HeaderProps> = (props) => {
                                 setIsStop(true);
                             }}/>
             <Button.GradientButton 
-                text={props.isFormOpen?'back to cloud':'my page'}
+                text={props.isFormOpen?'back':'my page'}
                 isDisabled={false}
+                width={'7rem'}
                 textColor={`rgb(${theme.colors.textPrimary})`} 
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
-                hoveredBgColor={`rgb(${theme.colors.resolve})`}
-                border={`rgb(${theme.colors.border})`}
-                onClick={isStop? 
-                    ()=>{
-                        props.stopFunc();
-                        setIsStop(false);
-                        }
-                    :()=>{
-                        props.startFunc();
-                        setIsStop(true);
-                    }}/>
+                hoveredBgColor={props.isFormOpen?`rgb(${theme.colors.secondary})`:`rgb(${theme.colors.resolve})`}
+                border={`1px solid rgb(${theme.colors.border})`}
+                onClick={props.formOpenFunc}/>
         </ContainerDiv>
     )
 }
