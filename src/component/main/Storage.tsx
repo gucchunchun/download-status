@@ -13,7 +13,7 @@ const ContainerDiv = styled('div')<ContainerDivProps>`
     width: 100%;
     height: ${props=>props.height || '10rem'};
     padding: 1rem;
-    background-color: rgb(${theme.colors.secondary});
+    background-color: rgb(${theme.colors.primary});
     border: 1px solid rgb(${theme.colors.border});
     border-radius: 5px;
     display: flex;

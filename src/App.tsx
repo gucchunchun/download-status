@@ -2,7 +2,8 @@ import React, {useState, useEffect, useRef } from 'react';
 import * as Type from './Type';
 import { Global } from '@emotion/react';
 import globalStyles from './styles/globalStyles';
-import { AuthForm, Dialog, MainContainer, MenuContainer, FakeUpdateButton } from './component/index';
+import { AuthForm, MainContainer, MenuContainer, Header } from './component/index';
+import { Dialog } from './component/common/index';
 
 const App:React.FC = () => {
     const [dataIndex, setDataIndex] = useState<(number|null)>(null);
@@ -14,6 +15,7 @@ const App:React.FC = () => {
     const [willUsed, setWillUsed] = useState<number>(0);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [timeout, setNewTimeout] = useState<(NodeJS.Timeout|1|null)>(null);
+    const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
   
     //func to fakery update the file data too cloud
     const newTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -98,6 +100,29 @@ const App:React.FC = () => {
                 window.location.reload();
             },5000);
         });
+
+        return(()=>{
+            fetch('/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userData, dataIndex })
+            })
+            .then((res)=>{
+                if(res.status === 401){
+                    return res.json().then((err) =>{
+                    throw new Error(err.message)});
+                }else {
+                    return res.json();
+                }})
+                .then((data)=>{
+                    console.log(data.message);
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+        })
     }, []);
     //set updated files & addFiles after userData & files are set
     // can not be done in handleLogin because useState is asynchronous
@@ -106,6 +131,7 @@ const App:React.FC = () => {
         if ( userData === null ) {
             return;
         }
+        setIsFormOpen(false);
         const tempUpdatedFiles = files.filter((file)=>{
             if(userData.data.updatedFiles.includes(file.filename)){
                 file.status.status = Type.Status.Completed;
@@ -174,14 +200,19 @@ const App:React.FC = () => {
         })
         setUsed(tempUsed);
         setWillUsed(tempWillUsed);
-    },[updatedFiles])
+    },[updatedFiles]);
+
     //onClick
     function handleMenuOpenClick():void {
         setIsMenuOpen((prev)=>!prev);
     }
+    function handleFormOpenClick():void {
+        setIsFormOpen((prev)=>!prev);
+    }
     return (
         <>
         <Global styles={globalStyles} />
+        {userData?<Header isFormOpen={isFormOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
         <MainContainer 
             files={updatedFiles} 
             used={used} 
@@ -197,8 +228,7 @@ const App:React.FC = () => {
         :
             null
         }
-        <FakeUpdateButton startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>
-        <Dialog isDisabled={userData===null?false: true}>
+        <Dialog isDisabled={isFormOpen?false: true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
       </>

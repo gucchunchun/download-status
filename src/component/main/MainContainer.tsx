@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import theme from '../../styles/theme';
 import * as Type from '../../Type';
 import { Storage, UpdatedFiles } from './index';
-import { GradientButton } from '../index';
+import { Button } from '../common/index';
 
 interface MainContainerProps {
     files: Type.File[];
@@ -40,14 +40,14 @@ const MainContainer:React.FC<MainContainerProps> = (props) => {
                 files={props.files} 
                 statusOnClick={props.statusOnClick} 
                 deleteOnClick={props.deleteOnClick}/>
-            <GradientButton 
+            <Button.GradientButton 
                 text={'update files'} 
                 isDisabled={false}
                 textColor={`rgb(${theme.colors.textPrimary})`} 
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
                 border={`1px solid rgb(${theme.colors.border})`}
                 bgColor={`rgb(${theme.colors.primary})`} 
-                hoveredBgColor={`rgb(${theme.colors.resolve})`}
+                hoveredBgColor={`rgb(${theme.colors.textPrimary})`}
                 onClick={props.menuOpenOnClick}  />
         </ContainerDiv>
     );

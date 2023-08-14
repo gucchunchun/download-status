@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
-import * as Type from '../../Type';
 import { GradientButton } from '../index';
 
 interface SettingButtonProps{
@@ -23,13 +22,11 @@ const SettingOpenButton = styled('button')<SettingOpenButtonProps>`
     width: 30%;
     height: 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     transform: ${props=>props.isHovered? 'scale(0.95)': 'scale(1)'};
     transition: all 0.1s ease-in;
 `;
-
 const GearPath = styled('path')<SettingOpenButtonProps>`
     width: 100%;
     height: 100%;
