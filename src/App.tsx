@@ -15,6 +15,7 @@ const App:React.FC = () => {
     const [willUsed, setWillUsed] = useState<number>(0);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [timeout, setNewTimeout] = useState<(NodeJS.Timeout|1|null)>(null);
+    const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
   
     //func to fakery update the file data too cloud
     const newTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -130,6 +131,7 @@ const App:React.FC = () => {
         if ( userData === null ) {
             return;
         }
+        setIsFormOpen(false);
         const tempUpdatedFiles = files.filter((file)=>{
             if(userData.data.updatedFiles.includes(file.filename)){
                 file.status.status = Type.Status.Completed;
@@ -223,7 +225,7 @@ const App:React.FC = () => {
             null
         }
         <FakeUpdateButton startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>
-        <Dialog isDisabled={userData===null?false: true}>
+        <Dialog isDisabled={isFormOpen?false: true}>
             <AuthForm handleLogin={handleLogin}/>
         </Dialog>
       </>

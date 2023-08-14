@@ -47,7 +47,7 @@ const MainContainer:React.FC<MainContainerProps> = (props) => {
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
                 border={`1px solid rgb(${theme.colors.border})`}
                 bgColor={`rgb(${theme.colors.primary})`} 
-                hoveredBgColor={`rgb(${theme.colors.resolve})`}
+                hoveredBgColor={`rgb(${theme.colors.secondary})`}
                 onClick={props.menuOpenOnClick}  />
         </ContainerDiv>
     );
