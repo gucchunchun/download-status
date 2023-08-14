@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
-import * as Type from '../../Type';
 
 interface StorageProps {
     used: (number);
@@ -11,25 +10,25 @@ interface ContainerDivProps {
     height?: string;
 }
 const ContainerDiv = styled('div')<ContainerDivProps>`
-    width: 90%;
+    width: 100%;
     height: ${props=>props.height || '10rem'};
+    padding: 1rem;
+    background-color: rgb(${theme.colors.secondary});
+    border: 1px solid rgb(${theme.colors.border});
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(${theme.colors.primary});
-    border: 1px solid rgb(${theme.colors.border});
-    border-radius: 5px;
 `;
 const TitleH2 = styled('h2')`
     width: 100%;
-    padding-left: 5%;
-    text-align: left;
+    text-align: center;
 `;
 const MeterDiv = styled('div')`
     width: 90%;
     height: 5%;
-    border: 0.8px solid #000;
+    border: 0.8px solid rgb(${theme.colors.border});
     border-radius: 5px;
 `;
 interface usedMeterProps {
@@ -38,13 +37,13 @@ interface usedMeterProps {
 const UsedMeterDiv = styled('div')<usedMeterProps>`
     width: ${props=>props.used===null? 0: (props.used/10)+'%'};
     height: 100%;
-    border: 0.8px solid #000;
+    background-color: rgb(${theme.colors.border});
+    border: 0.8px solid rgb(${theme.colors.border});
     border-radius: 5px;
-    background-color: #000;
     transition: width 0.3s;
 `;
 const UsageInfoP = styled('p')`
-    width: 100%;
+    width: fit-content;
     text-align: center;
 `;
 const Storage:React.FC<StorageProps> = (props) => {

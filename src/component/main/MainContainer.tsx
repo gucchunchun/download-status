@@ -5,9 +5,6 @@ import * as Type from '../../Type';
 import { Storage, UpdatedFiles } from './index';
 import { GradientButton } from '../index';
 
-
-//TODO: add FUNC
-
 interface MainContainerProps {
     files: Type.File[];
     used: number;
@@ -20,23 +17,21 @@ interface ContainerProps {
     used: (number|null);
 }
 const ContainerDiv = styled('div')<ContainerProps> `
-    width: clamp(17rem, 50vw, 28rem); 
-    height: fit-content;
-    padding: 1rem;
-    border-radius: 0.5rem;
     position: absolute;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    filter: ${props=>props.used===null? 'blur(4px)': 'blur(0)'};
+    width: clamp(19rem, 50vw, 28rem); 
+    height: fit-content;
+    padding: 1rem;
     background-color: rgb(${theme.colors.primary});
     border: 1px solid rgb(${theme.colors.border});
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 `;
-
 const MainContainer:React.FC<MainContainerProps> = (props) => {
     return(
         <ContainerDiv used={props.used}>
