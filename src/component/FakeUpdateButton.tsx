@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { GradientButton } from './index';
+import { Button } from './common/index';
 
 interface FakeUpdateButtonProps {
     startFunc: ()=>void;
     stopFunc: ()=>void;
 }
-const StyledButton = styled(GradientButton)`
+const StyledDiv = styled('div')`
     position: absolute;
-    bottom: 1rem;
+    top: 1rem;
     left: 1rem;
 `;
 const FakeUpdateButton:React.FC<FakeUpdateButtonProps> = (props) => {
     const [isStop, setIsStop] = useState<boolean>(false);
     return(
-        <>
-            <StyledButton 
+        <StyledDiv>
+            <Button.GradientButton
                 text={isStop?'stop': 'start'}
                 isDisabled={false}
                 onClick={isStop? 
@@ -27,7 +27,7 @@ const FakeUpdateButton:React.FC<FakeUpdateButtonProps> = (props) => {
                                 props.startFunc();
                                 setIsStop(true);
                             }}/>
-        </>
+        </StyledDiv>
     )
 };
 

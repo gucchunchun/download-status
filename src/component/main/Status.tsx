@@ -222,7 +222,6 @@ const Status:React.FC<StatusProps> = (props) => {
         animationFrameId = requestAnimationFrame(animate);
 
         return((()=>{
-            console.log('unmount')
             cancelAnimationFrame(animationFrameId);
         }))
     },[props, isHovered, isCompleted, waitingAngle]);
