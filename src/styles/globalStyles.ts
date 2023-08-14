@@ -33,9 +33,6 @@ const globalStyles = css`
     p {
         font-size: 1rem;
     }
-    input {
-        border: 1px solid rgb(${theme.colors.border});
-    }
 `
 
 export default globalStyles;

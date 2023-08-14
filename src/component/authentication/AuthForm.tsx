@@ -1,17 +1,39 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import styled from '@emotion/styled'
+import React, { useState } from 'react';
+import styled from '@emotion/styled';
+import theme from '../../styles/theme';
 import * as Type from '../../Type';
-import { GradientButton } from '../index';
+import { Button, Form } from '../common/index';
 
 interface AuthFormProps  {
     handleLogin:(index:number, user:Type.User) => void;
 }
+const StyledForm = styled('form')`
+    width: 16rem;
+    height: 16rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+`;
 const AuthForm:React.FC<AuthFormProps> = (props) => {
     const [isLogin, setIsLogin] = useState<boolean>(true);
     const [id, setId] = useState<string>('');
     const [pwd, setPwd] = useState<string>('');
     const [error, setError] = useState<(string|null)>(null);
-
+const ToggleDiv = styled('div')`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+const ToggleP = styled('p')`
+    width: fit-content;
+    font-size: 0.7rem;
+    &:first-letter {
+        text-transform: capitalize;
+    }
+`;
 
     function handleLoginSubmit(e:React.FormEvent<HTMLFormElement>):void {
         e.preventDefault();
@@ -79,28 +101,36 @@ const AuthForm:React.FC<AuthFormProps> = (props) => {
         setPwd('');
     }
     return(
-        <form onSubmit={isLogin? handleLoginSubmit: handleSignUpSubmit}>
+        <StyledForm onSubmit={isLogin? handleLoginSubmit: handleSignUpSubmit}>
             {error? <p>{error}</p>: null}
-            <p>{isLogin? 'login': 'sign up'}</p>
-            <label htmlFor='id'>ID</label>
-            <input 
-                id='id'
-                name='id'
-                type='text'
-                value={id}
-                onChange={(e) => setId(e.target.value)}
-            />
-            <label htmlFor='pwd'>Password</label>
-            <input 
-                id='pwd'
-                name='pwd'
-                type='password'
-                value={pwd}
-                onChange={(e) => setPwd(e.target.value)}
-            />
-            <GradientButton type='submit' text={isLogin? 'login': 'sign up'} isDisabled={false} />
-            <GradientButton type='button' onClick={handleToggleButton} text={isLogin? "sign up": "login"} isDisabled={false}/>
-        </form>
+            <h3>{isLogin? 'login': 'sign up'}</h3>
+            <Form.MyInput 
+                id={'id'} 
+                name={'id'} 
+                value={id} 
+                type={'text'} 
+                label={'ID'} 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>setId(e.target.value)}
+                 />
+            <Form.MyInput 
+                id={'pwd'} 
+                name={'pwd'} 
+                value={pwd} 
+                type={'password'} 
+                label={'Password'} 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>setId(e.target.value)}
+                 />
+            <ToggleDiv>
+                <ToggleP>{isLogin? 'you don\'t have account?':'do you have account?'}</ToggleP>
+                <Button.TextButton 
+                    type='button' 
+                    text={isLogin? 'sign up': 'login'} 
+                    textColor={`rgb(${theme.colors.textPrimary})`} 
+                    hoveredTextColor={`rgb(${theme.colors.resolve})`} 
+                    onClick={handleToggleButton}/>
+            </ToggleDiv>
+            <Button.GradientButton type='submit' text={isLogin? 'login': 'sign up'} isDisabled={false} />
+        </StyledForm>
     )
 }
 

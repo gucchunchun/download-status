@@ -98,6 +98,29 @@ const App:React.FC = () => {
                 window.location.reload();
             },5000);
         });
+
+        return(()=>{
+            fetch('/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userData, dataIndex })
+            })
+            .then((res)=>{
+                if(res.status === 401){
+                    return res.json().then((err) =>{
+                    throw new Error(err.message)});
+                }else {
+                    return res.json();
+                }})
+                .then((data)=>{
+                    console.log(data.message);
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+        })
     }, []);
     //set updated files & addFiles after userData & files are set
     // can not be done in handleLogin because useState is asynchronous
@@ -174,7 +197,8 @@ const App:React.FC = () => {
         })
         setUsed(tempUsed);
         setWillUsed(tempWillUsed);
-    },[updatedFiles])
+    },[updatedFiles]);
+
     //onClick
     function handleMenuOpenClick():void {
         setIsMenuOpen((prev)=>!prev);

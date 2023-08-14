@@ -19,11 +19,11 @@ interface StyledButtonProps {
 }
 
 const StyledButton = styled('button')<StyledButtonProps>`
-    width: ${props=>props.width || props.text.length + 'rem'}
-    height: ${props=>props.height || 'fit-content'}
-    color: ${props=>props.color || '#DCDCDC'}
+    width: ${props=>props.width || 'fit-content'};
+    height: ${props=>props.height || 'fit-content'};
+    color: ${props=>props.color || '#DCDCDC'};
     &:hover {
-        color: ${props=>props.hoveredColor || '#000'}
+        color: ${props=>props.hoveredColor || '#000'};
     }
 `;
 
@@ -38,7 +38,9 @@ const TextButton:React.FC<TextButtonProps> = (props) => {
                 hoveredColor={props.hoveredTextColor}
                 type={props.type}
                 onClick={props.onClick}
-            />
+            >
+                {props.text}
+            </StyledButton>
         </>
     )
 }
