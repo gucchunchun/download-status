@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import theme from '../../styles/theme';
 import * as Type from '../../Type';
 import { UpdatedFile } from './index';
 
@@ -15,12 +14,12 @@ interface ContainerDivProps {
     height?: string;
 };
 const ContainerDiv = styled('div')<ContainerDivProps>`
-    width: 90%;
+    width: 100%;
     height: ${props=>props.height || '15rem'};
-    padding: 0.5rem 0;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    flexWrap: nowrap;
+    flex-wrap: no-wrap;
     justify-content: flex-start;
     overflow-y: scroll;
 `;
