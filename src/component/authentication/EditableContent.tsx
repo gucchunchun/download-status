@@ -19,12 +19,12 @@ interface EditableContentProps {
     onChange?: React.ChangeEventHandler
 }
 
-interface StyledDivProps{
+interface ContainerDivProps{
     width?: string;
     height?: string;
     inLine?: boolean;
 }
-const StyledDiv = styled('div')<StyledDivProps>`
+const ContainerDiv = styled('div')<ContainerDivProps>`
     width: ${props=>props.width||'100%'};
     height: ${props=>props.width||'fit-content'};
     display:${props=>props.inLine?'flex': 'block'};
@@ -37,16 +37,22 @@ interface StyledLabelProps {
     fontColor?: string;
     inLine?: boolean;
 }
-const StyledLabelDiv = styled('div')<StyledLabelProps>`
+const LabelDiv = styled('div')<StyledLabelProps>`
     width: ${props=>props.width||'fit-content'};
     font-size: ${props=>props.fontSize||'1rem'};
     font-weight: ${props=>props.fontWeight||'normal'};
     color: ${props=>props.color||theme.colors.textPrimary};
     ${props=>props.inLine!==true&&'margin-right: auto;'}
 `;
+interface ValueDivProps{
+    fontSize?: string;
+}
+const ValueDiv = styled('div')<ValueDivProps>`
+    width: auto;
+    flex-grow: 1;
+    font-size: ${props=>props.fontSize||'1rem'};
+`;
 interface StyledPProps{
-    width?: string;
-    height?: string;
     fontSize?: string;
     fontWeight?: string;
     fontColor?: string;
@@ -60,14 +66,7 @@ const StyledP = styled('p')<StyledPProps>`
     color: ${props=>props.color||theme.colors.textPrimary};
     text-align: center;
 `;
-interface ValueDivProps{
-    fontSize?: string;
-}
-const ValueDiv = styled('div')<ValueDivProps>`
-    width: auto;
-    flex-grow: 1;
-    font-size: ${props=>props.fontSize||'1rem'};
-`;
+
 interface StyledInputProps{
     fontWeight?: string;
     fontColor?: string;
@@ -101,18 +100,18 @@ const EditableContent:React.FC<EditableContentProps> = (props) => {
     }
   if (props.editMode) {
     return (
-      <StyledDiv
+      <ContainerDiv
         width={props.width}
         height={props.height}
         inLine={props.labelInline}>
-        {props.label?<StyledLabelDiv 
+        {props.label?<LabelDiv 
                         width={props.labelWidth}
                         fontSize={props.labelFontSize}
                         fontColor={props.fontColor}
                         fontWeight={props.labelFontWeight}
                         inLine={props.labelInline}>
                             <label htmlFor={props.label}>{props.label}</label>
-                        </StyledLabelDiv>:null}
+                        </LabelDiv>:null}
             <ValueDiv fontSize={props.fontSize}>
                 <StyledInput 
                     id={props.label} 
@@ -125,24 +124,24 @@ const EditableContent:React.FC<EditableContentProps> = (props) => {
                 </StyledInput>
             </ValueDiv>
             
-      </StyledDiv>
+      </ContainerDiv>
     );
   } else {
     return (
         <>
-            <StyledDiv
+            <ContainerDiv
             id={props.label}
             width={props.width}
             height={props.height}
             inLine={props.labelInline}>
-                {props.label?<StyledLabelDiv 
+                {props.label?<LabelDiv 
                                 width={props.labelWidth}
                                 fontSize={props.labelFontSize}
                                 fontColor={props.fontColor}
                                 fontWeight={props.labelFontWeight}
                                 inLine={props.labelInline}>
                                     <label htmlFor={props.label}>{props.label}</label>
-                                </StyledLabelDiv>:null}
+                                </LabelDiv>:null}
                 <ValueDiv>
                     <StyledP
                         fontSize={props.fontSize}
@@ -152,7 +151,7 @@ const EditableContent:React.FC<EditableContentProps> = (props) => {
                         {props.initialContent}
                     </StyledP>
                 </ValueDiv>
-            </StyledDiv>
+            </ContainerDiv>
         </>
     )
   }
