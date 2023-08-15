@@ -39,6 +39,10 @@ const UserIdDiv = styled('div')`
 `;
 const MyPage:React.FC<MyPageProps> = (props) => {
     const [editMode, setEditMode] = useState<boolean>(false);
+    const [id, setId] = useState(props.userData.id);
+    const [firstName, setFirstName] = useState(props.userData.data.name.first||'undefined');
+    const [middleName, setMiddleName] = useState(props.userData.data.name.middle||'undefined');
+    const [lastName, setLastName] = useState(props.userData.data.name.last||'undefined');
 
     return(
         <ContainerDiv>
@@ -47,16 +51,16 @@ const MyPage:React.FC<MyPageProps> = (props) => {
                 <UserIdDiv>
                     <EditableContent 
                     editMode={editMode} 
-                    initialContent={props.userData.id} 
-                    onChange={()=>{}}
+                    initialContent={id} 
+                    onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{setId(e.target.value)}}
                     fontSize={theme.font.size.h3} 
                     fontColor={theme.colors.textPrimary} 
                     fontWeight={theme.font.weight.heading} 
                     />
                     <EditableContent 
                     editMode={editMode} 
-                    initialContent={props.userData.pwd} 
-                    onChange={()=>{}}
+                    initialContent={firstName} 
+                    onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{setFirstName(e.target.value)}}
                     fontSize={theme.font.size.p} 
                     fontColor={theme.colors.textPrimary} 
                     fontWeight={theme.font.weight.p} 

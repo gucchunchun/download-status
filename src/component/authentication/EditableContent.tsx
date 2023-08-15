@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
 
@@ -45,12 +45,21 @@ const StyledInput = styled('input')<StyledInputProps>`
 `;
 const EditableContent:React.FC<EditableContentProps> = (props) => {
     const [value, setValue] = useState(props.initialContent);
+    useEffect(()=>{
+        if(props.onChange) {
+            setValue(props.initialContent);
+        }
+    },[props])
 
     function handleOnChange(event:React.ChangeEvent<HTMLInputElement>) {
         event.preventDefault();
-        setValue(event.target.value);
+        
         if(props.onChange){
+            //parents control value
             props.onChange(event);
+        }else{
+            //control by itself
+            setValue(event.target.value);
         }
     }
   if (props.editMode) {
