@@ -35,7 +35,7 @@ const EditContainer = styled('div')`
     width: 100%;
     height: 40%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 `;
 const Avatar:React.FC<AvatarProps> = (props) => {
@@ -53,7 +53,6 @@ const Avatar:React.FC<AvatarProps> = (props) => {
                     <Button.TextButton 
                         text={'edit'}
                         onClick={()=>{}}/>
-                        /
                     <Button.TextButton 
                         text={'change'}
                         onClick={()=>{}}/>
