@@ -22,6 +22,7 @@ const StyledButton = styled('button')<StyledButtonProps>`
     width: ${props=>props.width || 'fit-content'};
     height: ${props=>props.height || 'fit-content'};
     color: ${props=>props.color || '#DCDCDC'};
+    text-align: center;
     &:hover {
         color: ${props=>props.hoveredColor || '#000'};
     }

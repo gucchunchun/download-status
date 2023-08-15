@@ -8,7 +8,7 @@ import { Button } from '../common/index';
 interface HeaderProps {
     startFunc: ()=>void;
     stopFunc: ()=>void;
-    isFormOpen: boolean;
+    isAuthOpen: boolean;
     formOpenFunc: ()=>void;
 }
 const ContainerDiv = styled('div')`
@@ -41,12 +41,12 @@ const Header:React.FC<HeaderProps> = (props) => {
                                 setIsStop(true);
                             }}/>
             <Button.GradientButton 
-                text={props.isFormOpen?'back':'my page'}
+                text={props.isAuthOpen?'back':'my page'}
                 isDisabled={false}
                 width={'7rem'}
                 textColor={`rgb(${theme.colors.textPrimary})`} 
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
-                hoveredBgColor={props.isFormOpen?`rgb(${theme.colors.secondary})`:`rgb(${theme.colors.resolve})`}
+                hoveredBgColor={props.isAuthOpen?`rgb(${theme.colors.secondary})`:`rgb(${theme.colors.resolve})`}
                 border={`1px solid rgb(${theme.colors.border})`}
                 onClick={props.formOpenFunc}/>
         </ContainerDiv>

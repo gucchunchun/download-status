@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef } from 'react';
 import * as Type from './Type';
 import { Global } from '@emotion/react';
 import globalStyles from './styles/globalStyles';
-import { AuthForm, MainContainer, MenuContainer, Header } from './component/index';
+import { AuthForm, MainContainer, MenuContainer, Header, MyPage } from './component/index';
 import { Dialog } from './component/common/index';
 
 const App:React.FC = () => {
@@ -15,7 +15,7 @@ const App:React.FC = () => {
     const [willUsed, setWillUsed] = useState<number>(0);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [timeout, setNewTimeout] = useState<(NodeJS.Timeout|1|null)>(null);
-    const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
+    const [isAuthOpen, setIsAuthOpen] = useState<boolean>(true);
   
     //func to fakery update the file data too cloud
     const newTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -131,7 +131,7 @@ const App:React.FC = () => {
         if ( userData === null ) {
             return;
         }
-        setIsFormOpen(false);
+        setIsAuthOpen(false);
         const tempUpdatedFiles = files.filter((file)=>{
             if(userData.data.updatedFiles.includes(file.filename)){
                 file.status.status = Type.Status.Completed;
@@ -207,12 +207,12 @@ const App:React.FC = () => {
         setIsMenuOpen((prev)=>!prev);
     }
     function handleFormOpenClick():void {
-        setIsFormOpen((prev)=>!prev);
+        setIsAuthOpen((prev)=>!prev);
     }
     return (
         <>
         <Global styles={globalStyles} />
-        {userData?<Header isFormOpen={isFormOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
+        {userData?<Header isAuthOpen={isAuthOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
         <MainContainer 
             files={updatedFiles} 
             used={used} 
@@ -228,8 +228,12 @@ const App:React.FC = () => {
         :
             null
         }
-        <Dialog isDisabled={isFormOpen?false: true}>
-            <AuthForm handleLogin={handleLogin}/>
+        <Dialog isDisabled={isAuthOpen?false: true}>
+            {userData===null?
+                <AuthForm handleLogin={handleLogin}/>
+            :
+                <MyPage userData={userData} />
+            }
         </Dialog>
       </>
     );

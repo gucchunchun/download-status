@@ -75,7 +75,7 @@ const StyledSpan = styled('span')<StyledSpanProps>`
  * @param {boolean} props.isDisabled - if the button is disabled
  * @param {string} props.disabledText -text to display on button when the button is disabled
  * @param {("button" | "submit" | "reset")} props.type - button type
- * @param {string} props.width -button width. it would be text.length*1rem if it is not defined
+ * @param {string} props.width -button width. it would be 'fit-content' if it is not defined
  * @param {string} props.padding -button padding. it would be 0.5rem if it is not defined
  * @param {string} props.textColor - text's color. it would be black(#000) if it is not defined
  * @param {string} props.hoveredTextColor - text's color when the button is hovered. it would be white(#FFFFFF) if it is not defined
