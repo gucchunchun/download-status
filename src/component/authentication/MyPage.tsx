@@ -37,6 +37,15 @@ const UserIdDiv = styled('div')`
         margin-bottom: 0.5rem;
     }
 `;
+const UserSecondaryInfoDiv = styled('div')`
+    width: 100%;
+    height: 8rem;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+`;
 const MyPage:React.FC<MyPageProps> = (props) => {
     const [editMode, setEditMode] = useState<boolean>(false);
     const [id, setId] = useState(props.userData.id);
@@ -64,9 +73,14 @@ const MyPage:React.FC<MyPageProps> = (props) => {
                     fontSize={theme.font.size.p} 
                     fontColor={theme.colors.textPrimary} 
                     fontWeight={theme.font.weight.p} 
+                    label={'ID:'}
+                    labelInline={true}
+                    labelFontSize='0.8rem'
                     />
                 </UserIdDiv>
             </UserPrimaryInfoDiv>
+            <UserSecondaryInfoDiv>
+            </UserSecondaryInfoDiv>
             
             <Button.GradientButton 
                 text={editMode?'save':'edit'}
