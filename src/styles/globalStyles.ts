@@ -33,6 +33,9 @@ const globalStyles = css`
     p {
         font-size: 1rem;
     }
+    input[type='radio']{
+        all: revert;
+    }
 `
 
 export default globalStyles;

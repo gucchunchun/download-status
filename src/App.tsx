@@ -209,6 +209,32 @@ const App:React.FC = () => {
     function handleFormOpenClick():void {
         setIsAuthOpen((prev)=>!prev);
     }
+    function save_userData(n_userData?:Type.User):void {
+        let new_userData = userData;
+        if ( n_userData ) {
+            new_userData = n_userData;
+        }
+        fetch('/api/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ new_userData, dataIndex })
+        })
+        .then((res)=>{
+            if(res.status === 401){
+                return res.json().then((err) =>{
+                throw new Error(err.message)});
+            }else {
+                return res.json();
+            }})
+            .then((data)=>{
+                console.log(data.message);
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+    }
     return (
         <>
         <Global styles={globalStyles} />
@@ -232,7 +258,11 @@ const App:React.FC = () => {
             {userData===null?
                 <AuthForm handleLogin={handleLogin}/>
             :
-                <MyPage userData={userData} />
+                <MyPage 
+                    userData={userData} 
+                    updatedFiles={updatedFiles} 
+                    setUserData={(new_userData:Type.User)=>setUserData(new_userData)}
+                    save_userData={save_userData}/>
             }
         </Dialog>
       </>
