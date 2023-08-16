@@ -76,12 +76,13 @@ const MyPage:React.FC<MyPageProps> = (props) => {
     const [country, setCountry] = useState(props.userData.data.country||'');
     const [address, setAddress] = useState(props.userData.data.address||'');
     const [gender, setGender] = useState(props.userData.data.gender||'');
-    const [avatarPath, setAvatarPath] = useState(props.userData.data.avatar||null);
-    const [selectedFile, setSelectedFile] = useState<(string|null)>(null);
+    const [avatarPath, setAvatarPath] = useState(props.userData.data.avatar||'');
+    const [selectedFile, setSelectedFile] = useState('');
 
-    function handleSaveClick() {
+    async function handleSaveClick() {
+        let avatar = avatarPath? avatarPath: '';
         if(selectedFile) {
-            handleUpload();
+            avatar = await handleUpload();
         }
         const new_userData = {
             id: id===''?props.userData.id:id,
@@ -102,7 +103,7 @@ const MyPage:React.FC<MyPageProps> = (props) => {
                 country: country,
                 address: address,
                 gender: gender,
-                avatar: avatarPath,
+                avatar: avatar,
                 updatedFiles: props.updatedFiles.map(file => file.filename)
             }
         }
@@ -127,29 +128,39 @@ const MyPage:React.FC<MyPageProps> = (props) => {
         setCountry(props.userData.data.country||'');
         setAddress(props.userData.data.address||'');
         setGender(props.userData.data.gender||'');
-        setAvatarPath(props.userData.data.avatar||null);
+        setAvatarPath(props.userData.data.avatar||'');
+        setSelectedFile(''); 
     }
-    async function handleUpload() {
-        const formData = new FormData();
-        
-        // Fetch the blob data from the Blob URL
-        const blobResponse = await fetch(selectedFile as string);
-        const blobData = await blobResponse.blob();
-        
-        // Create a File object from the blob data
-        const file = new File([blobData], 'filename.png', { type: 'image/png' }); // Adjust filename and type as needed
-        
-        formData.append('file', file);
-        formData.append('userId', id === '' ? props.userData.id : id);
-        
-        fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        })
-        .then((res) => res.json())
-        .then((data) => console.log(data.message))
-        .catch((err) => console.error('Error uploading image:', err));
-    }
+    async function handleUpload(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+          const formData = new FormData();
+      
+          // Fetch the blob data from the Blob URL
+          fetch(selectedFile as string)
+            .then((blobResponse) => blobResponse.blob())
+            .then((blobData) => {
+              // Create a File object from the blob data
+              const file = new File([blobData], 'filename.png', { type: 'image/png' }); // Adjust filename and type as needed
+      
+              formData.append('file', file);
+              formData.append('userId', id === '' ? props.userData.id : id);
+      
+              return fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+              });
+            })
+            .then((res) => res.json())
+            .then((data) => {
+              resolve(data.path); // Resolve the promise with the path value
+            })
+            .catch((err) => {
+              console.error('Error uploading image:', err);
+              reject(err); // Reject the promise if there's an error
+            });
+        });
+      }
+      
       
     return(
         <ContainerDiv>
