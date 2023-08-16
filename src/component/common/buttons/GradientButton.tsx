@@ -67,7 +67,7 @@ const StyledSpan = styled('span')<StyledSpanProps>`
     aspect-ratio: 1/1;
     border-radius: 50%;
     background-color: ${props=>props.bgColor || '#000'};
-    transition: 0.5s ease all;
+    transition: 0.35s ease all;
 `;
 /**
  * 
