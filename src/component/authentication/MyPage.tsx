@@ -58,7 +58,6 @@ const ButtonContainerDiv = styled('div')`
     align-items: center;
 `;
 const MyPage:React.FC<MyPageProps> = (props) => {
-
     const [editMode, setEditMode] = useState<boolean>(false);
     const [id, setId] = useState(props.userData.id);
     const [pwd, setPwd] = useState(props.userData.pwd);
@@ -78,8 +77,12 @@ const MyPage:React.FC<MyPageProps> = (props) => {
     const [address, setAddress] = useState(props.userData.data.address||'');
     const [gender, setGender] = useState(props.userData.data.gender||'');
     const [avatarPath, setAvatarPath] = useState(props.userData.data.avatar||null);
+    const [selectedFile, setSelectedFile] = useState<(string|null)>(null);
 
     function handleSaveClick() {
+        if(selectedFile) {
+            handleUpload();
+        }
         const new_userData = {
             id: id===''?props.userData.id:id,
             pwd: pwd===''?props.userData.pwd:pwd,
@@ -126,10 +129,38 @@ const MyPage:React.FC<MyPageProps> = (props) => {
         setGender(props.userData.data.gender||'');
         setAvatarPath(props.userData.data.avatar||null);
     }
+    async function handleUpload() {
+        const formData = new FormData();
+        
+        // Fetch the blob data from the Blob URL
+        const blobResponse = await fetch(selectedFile as string);
+        const blobData = await blobResponse.blob();
+        
+        // Create a File object from the blob data
+        const file = new File([blobData], 'filename.png', { type: 'image/png' }); // Adjust filename and type as needed
+        
+        formData.append('file', file);
+        formData.append('userId', id === '' ? props.userData.id : id);
+        
+        fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
+        .then((res) => res.json())
+        .then((data) => console.log(data.message))
+        .catch((err) => console.error('Error uploading image:', err));
+    }
+      
     return(
         <ContainerDiv>
             <UserPrimaryInfoDiv>
-                <Avatar avatarPath={avatarPath} width='45%' height='100%' editMode={editMode} change_avatar={(path:string)=>setAvatarPath(path)}/>
+                <Avatar 
+                    avatarPath={selectedFile?selectedFile:avatarPath} 
+                    width='45%' 
+                    height='100%' 
+                    editMode={editMode} 
+                    change_avatar={(path:string)=>setAvatarPath(path)}
+                    setSelectedFile={(path:string)=>setSelectedFile(path)}/>
                 <UserIdDiv>
                     <EditableContent 
                     editMode={editMode} 

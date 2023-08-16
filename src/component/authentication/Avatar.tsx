@@ -9,6 +9,7 @@ interface AvatarProps {
     height: string
     editMode: boolean
     change_avatar:(path: string) => void
+    setSelectedFile:(path: string) => void
 }
 
 interface AvatarContainerProps {
@@ -56,30 +57,21 @@ const InputDiv = styled('div')`
     width: fit-content;
 `;
 const Avatar:React.FC<AvatarProps> = (props) => {
-    const [selectedFile, setSelectedFile] = useState(null);
+    
     function handleImageChange(event:React.ChangeEvent<HTMLInputElement>):void {
-        console.log('clicked')
         const files = event.target.files;
         if (files&&files.length>=1){
             const file = files[0];
             if (file) {
-            props.change_avatar(URL.createObjectURL(file));
+            props.setSelectedFile(URL.createObjectURL(file));
             }
         }
     }
-    const handleUpload = () => {
-        const formData = new FormData();
-        if(selectedFile){
-            formData.append('image', selectedFile);
-        }
-       
-        // Send the formData to the server using a fetch or Axios
-        // Make sure to include any additional data, like the desired filename
-    };
+    
     return(
         <AvatarContainer width={props.width} height={props.height}>
             <AvatarImg 
-                src={selectedFile?selectedFile:props.avatarPath?props.avatarPath:'/img/user.png'} 
+                src={props.avatarPath?props.avatarPath:'/img/user.png'} 
                 alt="user avatar" 
                 editMode={props.editMode}/>
             {props.editMode?
