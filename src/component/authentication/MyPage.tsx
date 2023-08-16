@@ -4,6 +4,7 @@ import theme from '../../styles/theme';
 import * as Type from '../../Type';
 import { Button } from '../common/index';
 import { Avatar, EditableContent } from './index';
+import TextButton from '../common/buttons/TextButton';
 
 interface MyPageProps {
     userData: Type.User
@@ -49,10 +50,18 @@ const UserSecondaryInfoDiv = styled('div')`
     justify-content: space-between;
     align-items: left;
 `;
+const ButtonContainerDiv = styled('div')`
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+`;
 const MyPage:React.FC<MyPageProps> = (props) => {
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const [id, setId] = useState(props.userData.id);
+    const [pwd, setPwd] = useState(props.userData.pwd);
     const [firstName, setFirstName] = useState(props.userData.data.name.first||'');
     const [middleName, setMiddleName] = useState(props.userData.data.name.middle||'');
     const [lastName, setLastName] = useState(props.userData.data.name.last||'');
@@ -68,7 +77,7 @@ const MyPage:React.FC<MyPageProps> = (props) => {
     const [country, setCountry] = useState(props.userData.data.country||'');
     const [address, setAddress] = useState(props.userData.data.address||'');
     const [gender, setGender] = useState(props.userData.data.gender||'');
-    const [pwd, setPwd] = useState(props.userData.pwd);
+    const [avatarPath, setAvatarPath] = useState(props.userData.data.avatar||null);
 
     function handleSaveClick() {
         const new_userData = {
@@ -90,17 +99,37 @@ const MyPage:React.FC<MyPageProps> = (props) => {
                 country: country,
                 address: address,
                 gender: gender,
-                avatar: props.userData.data.avatar,
+                avatar: avatarPath,
                 updatedFiles: props.updatedFiles.map(file => file.filename)
             }
         }
         props.setUserData(new_userData);
         props.save_userData(new_userData);
     }
+    function handleInitializeClick() {
+        setId(props.userData.id);
+        setPwd(props.userData.pwd);
+        setFirstName(props.userData.data.name.first||'');
+        setMiddleName(props.userData.data.name.middle||'');
+        setLastName(props.userData.data.name.last||'');
+        setEmail(props.userData.data.email||'');
+        setPhone(props.userData.data.phone||'');
+        setBirthday(
+            props.userData.data.birthday.year===null||props.userData.data.birthday.month==null||props.userData.data.birthday.day==null?
+            ''
+            :
+            props.userData.data.birthday.year + '-' + 
+            (props.userData.data.birthday.month<10?'0'+props.userData.data.birthday.month:props.userData.data.birthday.month) + '-' + 
+            (props.userData.data.birthday.day<10?'0'+props.userData.data.birthday.day:props.userData.data.birthday.day));
+        setCountry(props.userData.data.country||'');
+        setAddress(props.userData.data.address||'');
+        setGender(props.userData.data.gender||'');
+        setAvatarPath(props.userData.data.avatar||null);
+    }
     return(
         <ContainerDiv>
             <UserPrimaryInfoDiv>
-                <Avatar avatarPath={props.userData.data.avatar} width='45%' height='100%' editMode={editMode}/>
+                <Avatar avatarPath={avatarPath} width='45%' height='100%' editMode={editMode} change_avatar={(path:string)=>setAvatarPath(path)}/>
                 <UserIdDiv>
                     <EditableContent 
                     editMode={editMode} 
@@ -242,24 +271,35 @@ const MyPage:React.FC<MyPageProps> = (props) => {
                     labelWidth={'40%'}/>
             </UserSecondaryInfoDiv>
             
-            <Button.GradientButton 
-                text={editMode?'save':'edit'}
-                isDisabled={false}
-                width={'5rem'}
-                textColor={`rgb(${theme.colors.textPrimary})`} 
-                hoveredTextColor={`rgb(${theme.colors.primary})`} 
-                bgColor={`rgb(${theme.colors.primary})`}
-                hoveredBgColor={`rgb(${editMode?theme.colors.resolve:theme.colors.secondary})`}
-                border={`1px solid rgb(${theme.colors.border})`}
-            onClick={editMode?
-                        ()=>{
-                            handleSaveClick();
-                            setEditMode(false);
+            <ButtonContainerDiv>
+                {editMode?
+                    <TextButton
+                    text={'go back without saving'}
+                    width={'50%'}
+                    onClick={()=>{
+                        handleInitializeClick();
+                        setEditMode(false);
+                    }}/>
+                :null}
+                <Button.GradientButton 
+                    text={editMode?'save':'edit'}
+                    isDisabled={false}
+                    width={'5rem'}
+                    textColor={`rgb(${theme.colors.textPrimary})`} 
+                    hoveredTextColor={`rgb(${theme.colors.primary})`} 
+                    bgColor={`rgb(${theme.colors.primary})`}
+                    hoveredBgColor={`rgb(${editMode?theme.colors.resolve:theme.colors.secondary})`}
+                    border={`1px solid rgb(${theme.colors.border})`}
+                onClick={editMode?
+                            ()=>{
+                                handleSaveClick();
+                                setEditMode(false);
+                            }
+                        :
+                            ()=>{setEditMode(true)}
                         }
-                    :
-                        ()=>{setEditMode(true)}
-                    }
-                />
+                    />
+                </ButtonContainerDiv>
         </ContainerDiv>
     )
 }

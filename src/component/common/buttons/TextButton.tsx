@@ -8,7 +8,8 @@ interface TextButtonProps {
     text: string
     textColor?: string
     hoveredTextColor?: string
-    onClick: MouseEventHandler
+    onClick?: MouseEventHandler
+    children?: React.ReactNode
 }
 interface StyledButtonProps {
     text: string
@@ -23,6 +24,7 @@ const StyledButton = styled('button')<StyledButtonProps>`
     height: ${props=>props.height || 'fit-content'};
     color: ${props=>props.color || '#DCDCDC'};
     text-align: center;
+    white-space: nowrap;
     &:hover {
         color: ${props=>props.hoveredColor || '#000'};
     }
@@ -40,7 +42,7 @@ const TextButton:React.FC<TextButtonProps> = (props) => {
                 type={props.type}
                 onClick={props.onClick}
             >
-                {props.text}
+                {props.text}{props.children}
             </StyledButton>
         </>
     )

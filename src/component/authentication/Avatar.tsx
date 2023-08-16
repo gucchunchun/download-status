@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
 import { Button } from '../common/index';
@@ -8,6 +8,7 @@ interface AvatarProps {
     width: string
     height: string
     editMode: boolean
+    change_avatar:(path: string) => void
 }
 
 interface AvatarContainerProps {
@@ -17,15 +18,19 @@ interface AvatarContainerProps {
 const AvatarContainer = styled('div')<AvatarContainerProps>`
     width: ${props=>props.width};
     height: ${props=>props.height};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `;
 interface AvatarImgProps {
     editMode: boolean;
 }
 const AvatarImg = styled('img')<AvatarImgProps>`
-    height: ${props=>props.editMode?'60%':'80%'};
+    height: ${props=>props.editMode?'60%':'90%'};
     aspect-ratio: 1;
     padding: 5px;
-    border: 2px solid rgb(${theme.colors.border});
+    border: 1px solid rgb(${theme.colors.border});
     border-radius: 50%;
     display: block;
     margin-left: auto;
@@ -38,24 +43,60 @@ const EditContainer = styled('div')`
     justify-content: space-around;
     align-items: center;
 `;
+const HiddenInput = styled('input')`
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+`;
+const InputDiv = styled('div')`
+    position: relative;
+    width: fit-content;
+`;
 const Avatar:React.FC<AvatarProps> = (props) => {
-    const [avatar, setAvatar] = useState(null);
-
-    useEffect(()=>{
-        //get avatar data from server
-        setAvatar(null);
-    },[]);
+    const [selectedFile, setSelectedFile] = useState(null);
+    function handleImageChange(event:React.ChangeEvent<HTMLInputElement>):void {
+        console.log('clicked')
+        const files = event.target.files;
+        if (files&&files.length>=1){
+            const file = files[0];
+            if (file) {
+            props.change_avatar(URL.createObjectURL(file));
+            }
+        }
+    }
+    const handleUpload = () => {
+        const formData = new FormData();
+        if(selectedFile){
+            formData.append('image', selectedFile);
+        }
+       
+        // Send the formData to the server using a fetch or Axios
+        // Make sure to include any additional data, like the desired filename
+    };
     return(
         <AvatarContainer width={props.width} height={props.height}>
-            <AvatarImg src={avatar?URL.createObjectURL(avatar):'/img/user.png'} alt="user avatar" editMode={props.editMode}/>
+            <AvatarImg 
+                src={selectedFile?selectedFile:props.avatarPath?props.avatarPath:'/img/user.png'} 
+                alt="user avatar" 
+                editMode={props.editMode}/>
             {props.editMode?
                 <EditContainer>
                     <Button.TextButton 
                         text={'edit'}
                         onClick={()=>{}}/>
-                    <Button.TextButton 
-                        text={'change'}
-                        onClick={()=>{}}/>
+                    <InputDiv>
+                        <Button.TextButton
+                                text={'change'}>
+                            <HiddenInput 
+                                    id="avatarUpload"
+                                    type='file' 
+                                    accept="image/*"
+                                    onChange={(e)=>handleImageChange(e)}/>
+                        </Button.TextButton>
+                    </InputDiv>
                 </EditContainer>
             :null}
         </AvatarContainer>
