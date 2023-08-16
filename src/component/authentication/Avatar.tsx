@@ -1,4 +1,4 @@
-import React, { useState, useEffect, MouseEvent } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
 import { Button } from '../common/index';
@@ -24,18 +24,38 @@ const AvatarContainer = styled('div')<AvatarContainerProps>`
     justify-content: center;
     align-items: center;
 `;
-interface AvatarImgProps {
+interface AvatarDivProps {
     editMode: boolean;
 }
-const AvatarImg = styled('img')<AvatarImgProps>`
-    height: ${props=>props.editMode?'60%':'90%'};
-    aspect-ratio: 1;
-    padding: 5px;
+const AvatarDiv = styled('div')<AvatarDivProps>`
+    position: relative;
+    width: ${props => props.editMode ? '60%' : '80%'};
+    height: 0;
+    padding-bottom: ${props => props.editMode ? '60%' : '80%'};
     border: 1px solid rgb(${theme.colors.border});
     border-radius: 50%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    overflow: hidden;
+`
+interface AvatarImgProps {
+    top: string
+    left: string
+    scale: string
+    translateXY: string
+}
+const AvatarImgDiv = styled('div')<AvatarImgProps>`
+    position: absolute;
+    top: ${props => props.top || '50%'};
+    left: ${props => props.left || '50%'};
+    translate: ${props=>props.translateXY || '-50% -50%'};
+    width: fit-content;
+    height: fit-content;
+    min-width: 100%;
+    min-height: 100%;
+    transform: scale(${props => props.scale || '1'});
+    object-fit: cover;
+`;
+const AvatarImg = styled('img')`
+    object-fit: cover; /* hold original ratio */
 `;
 const EditContainer = styled('div')`
     width: 100%;
@@ -57,7 +77,15 @@ const InputDiv = styled('div')`
     width: fit-content;
 `;
 const Avatar:React.FC<AvatarProps> = (props) => {
-    
+    const [top, setTop] = useState<string>('50%');
+    const [left, setLeft] = useState<string>('50%');
+    const [translate, setTranslate] = useState<string>('-50% -50%');
+    const [scale, setScale] = useState<string>('1');
+    const [imgEdit, setImgEdit] = useState<boolean>(false);
+    const [drugged, setDrugged] = useState<boolean>(false);
+    const avatarDivRef = useRef<HTMLDivElement|null>(null);
+    const avatarImgDivRef = useRef<HTMLDivElement|null>(null);
+
     function handleImageChange(event:React.ChangeEvent<HTMLInputElement>):void {
         const files = event.target.files;
         if (files&&files.length>=1){
@@ -67,18 +95,78 @@ const Avatar:React.FC<AvatarProps> = (props) => {
             }
         }
     }
+    function handleImgDragStart(event:React.MouseEvent){
+        if(!avatarImgDivRef.current){
+            return;
+        }
+        //img w/h
+        const avatarImgDiv = avatarImgDivRef.current.getBoundingClientRect();
+        const imgWidth = avatarImgDiv.width;
+        const imgHeight = avatarImgDiv.height;
+        const imgX = avatarImgDiv.x;
+        const imgY = avatarImgDiv.y;
+
+        //start mouse position
+        const x = event.clientX;
+        const y = event.clientY;
+
+        //calculate percentage
+        const transX = Math.round(((x-imgX) / imgWidth * 100));
+        const transY = Math.round(((y-imgY) / imgHeight * 100));
+
+        setTranslate(`-${transX}% -${transY}%`);
+        setDrugged(true);
+    }
+    function handleImgDrag(event:React.MouseEvent){
+        if(!drugged) {
+            return;
+        }
+        if(!avatarDivRef.current){
+            return;
+        }
+        // parent xy
+        const avatarDiv = avatarDivRef.current.getBoundingClientRect();
+        const divX = avatarDiv.x;
+        const divY = avatarDiv.y;
+        // mouse position
+        const x = event.clientX;
+        const y = event.clientY;
+
+        setTop((y - divY) + 'px');
+        setLeft((x - divX) + 'px');
+    }
+    function handleDragEnd(){
+        setTranslate('-50% -50%');
+        setTop('50%');
+        setLeft('50%');
+    }
+    
     
     return(
         <AvatarContainer width={props.width} height={props.height}>
-            <AvatarImg 
-                src={props.avatarPath?props.avatarPath:'/img/user.png'} 
-                alt="user avatar" 
-                editMode={props.editMode}/>
+            <AvatarDiv editMode={props.editMode} ref={avatarDivRef}>
+                <AvatarImgDiv
+                    top={top}
+                    left={left}
+                    translateXY={translate}
+                    scale={scale}
+                    onDragStart={(e)=>handleImgDragStart(e)}
+                    onDrag={(e)=>handleImgDrag(e)}
+                    onDragEnd={handleDragEnd}
+                    ref={avatarImgDivRef}>
+                    <AvatarImg 
+                        src={props.avatarPath?props.avatarPath:'/img/user.png'} 
+                        alt="user avatar"
+                        draggable={true}
+                        onDragStart={()=>setDrugged(true)}
+                         />
+                </AvatarImgDiv>
+            </AvatarDiv> 
             {props.editMode?
                 <EditContainer>
                     <Button.TextButton 
                         text={'edit'}
-                        onClick={()=>{}}/>
+                        onClick={()=>setImgEdit((prev)=>!prev)}/>
                     <InputDiv>
                         <Button.TextButton
                                 text={'change'}>

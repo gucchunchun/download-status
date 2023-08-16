@@ -26,7 +26,7 @@ const ContainerDiv = styled('div')`
 const UserPrimaryInfoDiv = styled('div')`
     width: 100%;
     height: 8rem;
-    padding-bottom: 1rem;
+    padding: 0 5% 1rem 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
