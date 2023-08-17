@@ -47,6 +47,15 @@ export interface User {
         country: (string|null),
         address: (string|null),
         gender: Gender,
+        avatar: {
+            url: (string|null),
+            position: {
+                x: (string|null),
+                y: (string|null),
+                translate: (string|null),
+                scale: (string|null)
+            }
+        },
         updatedFiles: (string|null)[]
     }
 }

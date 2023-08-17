@@ -135,9 +135,10 @@ const ToggleP = styled('p')`
                 type='submit' 
                 text={isLogin? 'login': 'sign up'} 
                 isDisabled={false}
-                width={'5rem'} 
+                width={'6rem'} 
                 textColor={`rgb(${theme.colors.textPrimary})`} 
                 hoveredTextColor={`rgb(${theme.colors.primary})`} 
+                bgColor={`rgb(${theme.colors.primary})`}
                 hoveredBgColor={`rgb(${theme.colors.textPrimary})`}
                 border={`1px solid rgb(${theme.colors.border})`}
                 />
