@@ -5,11 +5,20 @@ import { Button } from '../common/index';
 
 interface AvatarProps {
     avatarPath: (string|null)
+    x: string
+    y: string
+    translate: string
+    scale: string
     width: string
     height: string
     editMode: boolean
     change_avatar:(path: string) => void
     setSelectedFile:(path: string) => void
+    positionSetter:{
+        x:React.Dispatch<React.SetStateAction<string>>,
+        y:React.Dispatch<React.SetStateAction<string>>,
+        translate:React.Dispatch<React.SetStateAction<string>>,
+        scale:React.Dispatch<React.SetStateAction<string>>}
 }
 
 interface AvatarContainerProps {
@@ -49,8 +58,8 @@ const AvatarImgDiv = styled('div')<AvatarImgProps>`
     translate: ${props=>props.translateXY || '-50% -50%'};
     width: fit-content;
     height: fit-content;
-    min-width: 100%;
-    min-height: 100%;
+    min-width: 105%;
+    min-height: 105%;
     transform: scale(${props => props.scale || '1'});
     object-fit: cover;
 `;
@@ -77,10 +86,6 @@ const InputDiv = styled('div')`
     width: fit-content;
 `;
 const Avatar:React.FC<AvatarProps> = (props) => {
-    const [top, setTop] = useState<string>('50%');
-    const [left, setLeft] = useState<string>('50%');
-    const [translate, setTranslate] = useState<string>('-50% -50%');
-    const [scale, setScale] = useState<string>('1');
     const [imgEdit, setImgEdit] = useState<boolean>(false);
     const [drugged, setDrugged] = useState<boolean>(false);
     const avatarDivRef = useRef<HTMLDivElement|null>(null);
@@ -96,7 +101,7 @@ const Avatar:React.FC<AvatarProps> = (props) => {
         }
     }
     function handleImgDragStart(event:React.MouseEvent){
-        if(!avatarImgDivRef.current){
+        if(!imgEdit||!avatarImgDivRef.current){
             return;
         }
         //img w/h
@@ -114,30 +119,60 @@ const Avatar:React.FC<AvatarProps> = (props) => {
         const transX = Math.round(((x-imgX) / imgWidth * 100));
         const transY = Math.round(((y-imgY) / imgHeight * 100));
 
-        setTranslate(`-${transX}% -${transY}%`);
+        props.positionSetter.translate(`-${transX}% -${transY}%`);
         setDrugged(true);
     }
     function handleImgDrag(event:React.MouseEvent){
-        if(!drugged) {
+        if (!imgEdit||!drugged || !avatarDivRef.current || !avatarImgDivRef.current) {
             return;
-        }
-        if(!avatarDivRef.current){
-            return;
-        }
+          }
         // parent xy
         const avatarDiv = avatarDivRef.current.getBoundingClientRect();
         const divX = avatarDiv.x;
         const divY = avatarDiv.y;
+        const divWidth = avatarDiv.width;
+        const divHeight = avatarDiv.height;
         // mouse position
         const x = event.clientX;
         const y = event.clientY;
         if(x===0 && y===0){
             return;
         }
+        let left = x - divX;
+        let top = y - divY;
 
-        setTop((y - divY) + 'px');
-        setLeft((x - divX) + 'px');
+        //img w/h
+        const avatarImgDiv = avatarImgDivRef.current.getBoundingClientRect();
+        const imgWidth = avatarImgDiv.width;
+        const imgHeight = avatarImgDiv.height;
+        const middleX = parseInt(props.translate.split(' ')[0]);
+        const middleY = parseInt(props.translate.split(' ')[1]);
+        // if(imgWidth * (-middleX) / 100 < left) {
+        //     // space on left side
+        //     left = imgWidth * (-middleX) / 100 - 1;
+        //     console.log('left' + left);
+        // }
+        // if((imgWidth * (100 - (-middleX)) / 100) < (divX + divWidth - left)){
+        //     //space on right side
+        //     left = divX + divWidth - (imgWidth * (100 - (-middleX)) / 100) - divX + 1;
+        //     console.log('right' + left);
+        // }
+        // if(imgHeight * (-middleY) / 100 < top) {
+        //     //space on top side
+        //     top = imgHeight * (-middleY) / 100 - 1;
+        //     console.log('top' + top);
+        // }
+        // if((imgHeight * (100 - (-middleY)) / 100) < (divY + divHeight - top)){
+        //     //space on bottom side
+        //     top = divY + divHeight - (imgHeight * (100 - (-middleY)) / 100) - divY + 1;
+        //     console.log('bottom' + top);
+        // }
+        
+        props.positionSetter.x(left + 'px');
+        props.positionSetter.y(top + 'px');
     }
+    
+
     function handleOnDragEnd(event:React.MouseEvent){
         event.preventDefault();
         console.log('dragged');
@@ -145,7 +180,7 @@ const Avatar:React.FC<AvatarProps> = (props) => {
     function zoom(event:WheelEvent) {
         event.preventDefault();
       
-        setScale((prevScale)=>{
+        props.positionSetter.scale((prevScale)=>{
             let new_scale = Number(prevScale) + event.deltaY * -0.01;
             if(new_scale < 1){
                 new_scale = 1;
@@ -179,10 +214,10 @@ const Avatar:React.FC<AvatarProps> = (props) => {
         <AvatarContainer width={props.width} height={props.height}>
             <AvatarDiv editMode={props.editMode} ref={avatarDivRef}>
                 <AvatarImgDiv
-                    top={top}
-                    left={left}
-                    translateXY={translate}
-                    scale={scale}
+                    top={props.y}
+                    left={props.x}
+                    translateXY={props.translate}
+                    scale={props.scale}
                     onDragStart={(e)=>handleImgDragStart(e)}
                     onDrag={(e)=>handleImgDrag(e)}
                     onDragEnd={(e)=>handleOnDragEnd(e)}
@@ -198,7 +233,7 @@ const Avatar:React.FC<AvatarProps> = (props) => {
             {props.editMode?
                 <EditContainer>
                     <Button.TextButton 
-                        text={'edit'}
+                        text={imgEdit?'set':'edit'}
                         onClick={()=>setImgEdit((prev)=>!prev)}/>
                     <InputDiv>
                         <Button.TextButton

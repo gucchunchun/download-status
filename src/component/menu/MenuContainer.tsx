@@ -63,7 +63,7 @@ const MenuContainer:React.FC<MenuContainerProps> = (props) => {
             {props.files.map((file, index)=>{
                 return <MenuFile 
                             file={file} 
-                            key={index} 
+                            key={file.filename} 
                             index={index} 
                             used={props.used} 
                             isLast={index === props.files.length-1}

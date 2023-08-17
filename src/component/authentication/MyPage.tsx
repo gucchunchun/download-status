@@ -76,7 +76,11 @@ const MyPage:React.FC<MyPageProps> = (props) => {
     const [country, setCountry] = useState(props.userData.data.country||'');
     const [address, setAddress] = useState(props.userData.data.address||'');
     const [gender, setGender] = useState(props.userData.data.gender||'');
-    const [avatarPath, setAvatarPath] = useState(props.userData.data.avatar||'');
+    const [avatarPath, setAvatarPath] = useState(props.userData.data.avatar.url||'');
+    const [avatarX, setAvatarX] = useState(props.userData.data.avatar.position.x||'');
+    const [avatarY, setAvatarY] = useState(props.userData.data.avatar.position.y||'');
+    const [avatarTranslate, setAvatarTranslate] = useState(props.userData.data.avatar.position.translate||'');
+    const [avatarScale, setAvatarScale] = useState(props.userData.data.avatar.position.scale||'');
     const [selectedFile, setSelectedFile] = useState('');
 
     async function handleSaveClick() {
@@ -103,7 +107,15 @@ const MyPage:React.FC<MyPageProps> = (props) => {
                 country: country,
                 address: address,
                 gender: gender,
-                avatar: avatar,
+                avatar: {
+                    url: avatar,
+                    position: {
+                        x: avatarX,
+                        y: avatarY,
+                        translate: avatarTranslate,
+                        scale: avatarScale
+                    }
+                },
                 updatedFiles: props.updatedFiles.map(file => file.filename)
             }
         }
@@ -128,7 +140,11 @@ const MyPage:React.FC<MyPageProps> = (props) => {
         setCountry(props.userData.data.country||'');
         setAddress(props.userData.data.address||'');
         setGender(props.userData.data.gender||'');
-        setAvatarPath(props.userData.data.avatar||'');
+        setAvatarPath(props.userData.data.avatar.url||'');
+        setAvatarX(props.userData.data.avatar.position.x||'');
+        setAvatarY(props.userData.data.avatar.position.y||'');
+        setAvatarTranslate(props.userData.data.avatar.position.translate||'');
+        setAvatarScale(props.userData.data.avatar.position.scale||'');
         setSelectedFile(''); 
     }
     async function handleUpload(): Promise<string> {
@@ -167,11 +183,21 @@ const MyPage:React.FC<MyPageProps> = (props) => {
             <UserPrimaryInfoDiv>
                 <Avatar 
                     avatarPath={selectedFile?selectedFile:avatarPath} 
+                    x={avatarX}
+                    y={avatarY}
+                    translate={avatarTranslate}
+                    scale={avatarScale}
                     width='45%' 
                     height='100%' 
                     editMode={editMode} 
                     change_avatar={(path:string)=>setAvatarPath(path)}
-                    setSelectedFile={(path:string)=>setSelectedFile(path)}/>
+                    setSelectedFile={(path:string)=>setSelectedFile(path)}
+                    positionSetter={{
+                        x: setAvatarX, 
+                        y: setAvatarY, 
+                        translate: setAvatarTranslate,
+                        scale: setAvatarScale
+                        }}/>
                 <UserIdDiv>
                     <EditableContent 
                     editMode={editMode} 
