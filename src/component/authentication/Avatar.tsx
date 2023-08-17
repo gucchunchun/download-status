@@ -131,16 +131,49 @@ const Avatar:React.FC<AvatarProps> = (props) => {
         // mouse position
         const x = event.clientX;
         const y = event.clientY;
+        if(x===0 && y===0){
+            return;
+        }
 
         setTop((y - divY) + 'px');
         setLeft((x - divX) + 'px');
     }
-    function handleDragEnd(){
-        setTranslate('-50% -50%');
-        setTop('50%');
-        setLeft('50%');
+    function handleOnDragEnd(event:React.MouseEvent){
+        event.preventDefault();
+        console.log('dragged');
+    }
+    function zoom(event:WheelEvent) {
+        event.preventDefault();
+      
+        setScale((prevScale)=>{
+            let new_scale = Number(prevScale) + event.deltaY * -0.01;
+            if(new_scale < 1){
+                new_scale = 1;
+            }
+            return new_scale.toString();
+        }) 
     }
     
+    useEffect(() => {
+        const handleWheel = (e:WheelEvent) => {
+          e.preventDefault(); // Prevent default behavior
+          zoom(e); // Call your custom onWheel handler
+        };
+    
+        // Register the onWheel event listener with passive: false
+        if(!avatarImgDivRef.current){
+            return;
+        }
+        const currentImgDiv = avatarImgDivRef.current
+        currentImgDiv.addEventListener('wheel', handleWheel, { passive: false });
+    
+        // Clean up the event listener when the component unmounts
+        return () => {
+            if(currentImgDiv){
+                currentImgDiv.removeEventListener('wheel', handleWheel);
+            }
+        };
+    }, [avatarImgDivRef]);
     
     return(
         <AvatarContainer width={props.width} height={props.height}>
@@ -152,7 +185,7 @@ const Avatar:React.FC<AvatarProps> = (props) => {
                     scale={scale}
                     onDragStart={(e)=>handleImgDragStart(e)}
                     onDrag={(e)=>handleImgDrag(e)}
-                    onDragEnd={handleDragEnd}
+                    onDragEnd={(e)=>handleOnDragEnd(e)}
                     ref={avatarImgDivRef}>
                     <AvatarImg 
                         src={props.avatarPath?props.avatarPath:'/img/user.png'} 
