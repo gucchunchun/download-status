@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-, "waiting_refactored/BaseButton.tsx", "waiting_refactored/mainContainer.tsx", "waiting_refactored/cloudButton.tsx", "waiting_refactored/MenuContainer.tsx"  ]
+, "waiting_refactored/BaseButton.tsx", "waiting_refactored/mainContainer.tsx", "waiting_refactored/cloudButton.tsx", "waiting_refactored/MenuContainer.tsx", "src/component/main/UpdatedFiles.tsx"  ]
 }
