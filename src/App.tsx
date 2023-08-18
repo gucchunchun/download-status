@@ -261,7 +261,7 @@ const App:React.FC = () => {
                 <MyPage 
                     userData={userData} 
                     updatedFiles={updatedFiles} 
-                    setUserData={(new_userData:Type.User)=>setUserData(new_userData)}
+                    setUserData={(new_userData:(Type.User|null))=>setUserData(new_userData)}
                     save_userData={save_userData}/>
             }
         </Dialog>

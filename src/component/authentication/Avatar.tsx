@@ -58,8 +58,8 @@ const AvatarImgDiv = styled('div')<AvatarImgProps>`
     translate: ${props=>props.translateXY || '-50% -50%'};
     width: fit-content;
     height: fit-content;
-    min-width: 105%;
-    min-height: 105%;
+    min-width: 120%;
+    min-height: 120%;
     transform: scale(${props => props.scale || '1'});
     object-fit: cover;
 `;
@@ -123,15 +123,13 @@ const Avatar:React.FC<AvatarProps> = (props) => {
         setDrugged(true);
     }
     function handleImgDrag(event:React.MouseEvent){
-        if (!imgEdit||!drugged || !avatarDivRef.current || !avatarImgDivRef.current) {
+        if (!imgEdit|| !drugged || !avatarDivRef.current ) {
             return;
           }
         // parent xy
         const avatarDiv = avatarDivRef.current.getBoundingClientRect();
         const divX = avatarDiv.x;
         const divY = avatarDiv.y;
-        const divWidth = avatarDiv.width;
-        const divHeight = avatarDiv.height;
         // mouse position
         const x = event.clientX;
         const y = event.clientY;
@@ -140,56 +138,67 @@ const Avatar:React.FC<AvatarProps> = (props) => {
         }
         let left = x - divX;
         let top = y - divY;
-
-        //img w/h
-        const avatarImgDiv = avatarImgDivRef.current.getBoundingClientRect();
-        const imgWidth = avatarImgDiv.width;
-        const imgHeight = avatarImgDiv.height;
-        const middleX = parseInt(props.translate.split(' ')[0]);
-        const middleY = parseInt(props.translate.split(' ')[1]);
-        // if(imgWidth * (-middleX) / 100 < left) {
-        //     // space on left side
-        //     left = imgWidth * (-middleX) / 100 - 1;
-        //     console.log('left' + left);
-        // }
-        // if((imgWidth * (100 - (-middleX)) / 100) < (divX + divWidth - left)){
-        //     //space on right side
-        //     left = divX + divWidth - (imgWidth * (100 - (-middleX)) / 100) - divX + 1;
-        //     console.log('right' + left);
-        // }
-        // if(imgHeight * (-middleY) / 100 < top) {
-        //     //space on top side
-        //     top = imgHeight * (-middleY) / 100 - 1;
-        //     console.log('top' + top);
-        // }
-        // if((imgHeight * (100 - (-middleY)) / 100) < (divY + divHeight - top)){
-        //     //space on bottom side
-        //     top = divY + divHeight - (imgHeight * (100 - (-middleY)) / 100) - divY + 1;
-        //     console.log('bottom' + top);
-        // }
-        
         props.positionSetter.x(left + 'px');
         props.positionSetter.y(top + 'px');
     }
-    
 
-    function handleOnDragEnd(event:React.MouseEvent){
+    function handleImgDragEnd(event:React.MouseEvent){
         event.preventDefault();
-        console.log('dragged');
+        if ( !avatarDivRef.current || !avatarImgDivRef.current ) {
+            return;
+        }
+        // parent xy
+        const avatarDiv = avatarDivRef.current.getBoundingClientRect();
+        const divLeft = avatarDiv.left;
+        const divTop = avatarDiv.top;
+        const divRight = avatarDiv.right;
+        const divBottom = avatarDiv.bottom;
+        //img w/h
+        const avatarImgDiv = avatarImgDivRef.current.getBoundingClientRect();
+        const avatarImgDivLeft = avatarImgDiv.left;
+        const avatarImgDivTop = avatarImgDiv.top;
+        const avatarImgDivRight = avatarImgDiv.right;
+        const avatarImgDivBottom = avatarImgDiv.bottom;
+        
+        if( divLeft < avatarImgDivLeft ){
+            props.positionSetter.x((currentX)=>{
+                const newX = Number(currentX.split('px')[0]) - ( avatarImgDivLeft - divLeft ) - 8;
+                return newX + 'px';
+            })
+        }
+        else if ( avatarImgDivRight < divRight ){
+            props.positionSetter.x((currentX)=>{
+                const newX = Number(currentX.split('px')[0]) + ( divRight - avatarImgDivRight ) + 8;
+                return newX + 'px';
+            })
+        }
+        if( divTop < avatarImgDivTop ){
+            props.positionSetter.y((currentY)=>{
+                const newY = Number(currentY.split('px')[0]) - ( avatarImgDivTop - divTop ) - 8;
+                return newY + 'px';
+            })
+        }
+        else if ( avatarImgDivBottom < divBottom ){
+            props.positionSetter.y((currentY)=>{
+                const newY = Number(currentY.split('px')[0]) + ( divBottom - avatarImgDivBottom ) + 8;
+                return newY + 'px';
+            })
+        }
     }
-    function zoom(event:WheelEvent) {
-        event.preventDefault();
-      
-        props.positionSetter.scale((prevScale)=>{
-            let new_scale = Number(prevScale) + event.deltaY * -0.01;
-            if(new_scale < 1){
-                new_scale = 1;
-            }
-            return new_scale.toString();
-        }) 
-    }
+    
     
     useEffect(() => {
+        function zoom(event:WheelEvent) {
+            event.preventDefault();
+          
+            props.positionSetter.scale((prevScale)=>{
+                let new_scale = Number(prevScale) + event.deltaY * -0.01;
+                if(new_scale < 1){
+                    new_scale = 1;
+                }
+                return new_scale.toString();
+            }) 
+        }
         const handleWheel = (e:WheelEvent) => {
           e.preventDefault(); // Prevent default behavior
           zoom(e); // Call your custom onWheel handler
@@ -208,7 +217,7 @@ const Avatar:React.FC<AvatarProps> = (props) => {
                 currentImgDiv.removeEventListener('wheel', handleWheel);
             }
         };
-    }, [avatarImgDivRef]);
+    }, [avatarImgDivRef, props.positionSetter]);
     
     return(
         <AvatarContainer width={props.width} height={props.height}>
@@ -220,7 +229,7 @@ const Avatar:React.FC<AvatarProps> = (props) => {
                     scale={props.scale}
                     onDragStart={(e)=>handleImgDragStart(e)}
                     onDrag={(e)=>handleImgDrag(e)}
-                    onDragEnd={(e)=>handleOnDragEnd(e)}
+                    onDragEnd={(e)=>handleImgDragEnd(e)}
                     ref={avatarImgDivRef}>
                     <AvatarImg 
                         src={props.avatarPath?props.avatarPath:'/img/user.png'} 

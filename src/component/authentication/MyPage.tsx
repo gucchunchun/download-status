@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import theme from '../../styles/theme';
 import * as Type from '../../Type';
@@ -9,7 +9,7 @@ import TextButton from '../common/buttons/TextButton';
 interface MyPageProps {
     userData: Type.User
     updatedFiles: Type.File[]
-    setUserData: (new_userData: Type.User) => void
+    setUserData: (new_userData: (Type.User|null)) => void
     save_userData: (new_userData?: Type.User) => void
 }
 
@@ -340,15 +340,20 @@ const MyPage:React.FC<MyPageProps> = (props) => {
             </UserSecondaryInfoDiv>
             
             <ButtonContainerDiv>
-                {editMode?
-                    <TextButton
-                    text={'go back without saving'}
+                <TextButton
+                    text={editMode?'go back without saving':'log out'}
                     width={'50%'}
-                    onClick={()=>{
-                        handleInitializeClick();
-                        setEditMode(false);
-                    }}/>
-                :null}
+                    hoveredTextColor={editMode ? undefined : theme.colors.reject}
+                    onClick={editMode?
+                            ()=>{
+                                handleInitializeClick();
+                                setEditMode(false);
+                            }
+                            :
+                            ()=>{
+                                props.setUserData(null);
+                            }}
+                />
                 <Button.GradientButton 
                     text={editMode?'save':'edit'}
                     isDisabled={false}
