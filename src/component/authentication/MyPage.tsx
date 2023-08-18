@@ -342,8 +342,8 @@ const MyPage:React.FC<MyPageProps> = (props) => {
             <ButtonContainerDiv>
                 <TextButton
                     text={editMode?'go back without saving':'log out'}
-                    width={'50%'}
-                    hoveredTextColor={editMode ? undefined : theme.colors.reject}
+                    width={editMode?'50%':'5rem'}
+                    hoveredTextColor={editMode ? undefined :`rgb(${theme.colors.reject})`}
                     onClick={editMode?
                             ()=>{
                                 handleInitializeClick();
