@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef } from 'react';
 import * as Type from './Type';
 import { Global } from '@emotion/react';
 import globalStyles from './styles/globalStyles';
-import { AuthForm, MainContainer, MenuContainer, Header } from './component/index';
+import { AuthForm, MainContainer, MenuContainer, Header, MyPage } from './component/index';
 import { Dialog } from './component/common/index';
 
 const App:React.FC = () => {
@@ -15,7 +15,7 @@ const App:React.FC = () => {
     const [willUsed, setWillUsed] = useState<number>(0);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [timeout, setNewTimeout] = useState<(NodeJS.Timeout|1|null)>(null);
-    const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
+    const [isAuthOpen, setIsAuthOpen] = useState<boolean>(true);
   
     //func to fakery update the file data too cloud
     const newTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -131,7 +131,7 @@ const App:React.FC = () => {
         if ( userData === null ) {
             return;
         }
-        setIsFormOpen(false);
+        setIsAuthOpen(false);
         const tempUpdatedFiles = files.filter((file)=>{
             if(userData.data.updatedFiles.includes(file.filename)){
                 file.status.status = Type.Status.Completed;
@@ -207,12 +207,38 @@ const App:React.FC = () => {
         setIsMenuOpen((prev)=>!prev);
     }
     function handleFormOpenClick():void {
-        setIsFormOpen((prev)=>!prev);
+        setIsAuthOpen((prev)=>!prev);
+    }
+    function save_userData(n_userData?:Type.User):void {
+        let new_userData = userData;
+        if ( n_userData ) {
+            new_userData = n_userData;
+        }
+        fetch('/api/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ new_userData, dataIndex })
+        })
+        .then((res)=>{
+            if(res.status === 401){
+                return res.json().then((err) =>{
+                throw new Error(err.message)});
+            }else {
+                return res.json();
+            }})
+            .then((data)=>{
+                console.log(data.message);
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
     }
     return (
         <>
         <Global styles={globalStyles} />
-        {userData?<Header isFormOpen={isFormOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
+        {userData?<Header isAuthOpen={isAuthOpen} formOpenFunc={handleFormOpenClick} startFunc={start_fakeUpdate} stopFunc={stop_fakeUpdate}/>:null}
         <MainContainer 
             files={updatedFiles} 
             used={used} 
@@ -228,8 +254,16 @@ const App:React.FC = () => {
         :
             null
         }
-        <Dialog isDisabled={isFormOpen?false: true}>
-            <AuthForm handleLogin={handleLogin}/>
+        <Dialog isDisabled={isAuthOpen?false: true}>
+            {userData===null?
+                <AuthForm handleLogin={handleLogin}/>
+            :
+                <MyPage 
+                    userData={userData} 
+                    updatedFiles={updatedFiles} 
+                    setUserData={(new_userData:Type.User)=>setUserData(new_userData)}
+                    save_userData={save_userData}/>
+            }
         </Dialog>
       </>
     );

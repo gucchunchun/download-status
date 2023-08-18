@@ -15,18 +15,22 @@ interface MyInputProps {
     inputHeight?: string;
     inputTextSize?: string;
     labelTextSize?: string;
+    oneLine?: boolean;
     onChange?: ChangeEventHandler;
 }
 
 interface StyledDivProps {
     width?:string;
     height?:string;
+    oneLine?: boolean;
 }
 
-const StyledDiv = styled('div')<StyledDivProps>`
-    width: ${props=>props.width || '100%'};
-    height: ${props=>props.height || 'fit-contents'};
+const StyledDiv = styled.div<StyledDivProps>`
+  width: ${props => props.width || '100%'};
+  height: ${props => props.height || 'fit-content'};
+  ${props => props.oneLine && 'display: flex;'}
 `;
+
 interface StyledLabelProps {
     textSize?:string;
 }
@@ -48,7 +52,7 @@ const StyledInput = styled('input')<StyledInputProps>`
 `;
 const MyInput:React.FC<MyInputProps> = (props) => {
     return(
-        <StyledDiv>
+        <StyledDiv width={props.width} height={props.height} oneLine={props.oneLine}>
             {props.label?<StyledLabel htmlFor={props.id} textSize={props.labelTextSize}>{props.label}</StyledLabel>:null}
             <StyledInput
                 id={props.id}

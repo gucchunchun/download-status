@@ -33,7 +33,7 @@ const UpdatedFiles:React.FC<UpdatedFilesProps> = (props) => {
             props.files.map((file, index)=>{
                 return <UpdatedFile 
                             file={file} 
-                            key={index} 
+                            key={file.filename} 
                             index={index} 
                             isLast={index===props.files.length-1? true: false}
                             statusOnClick={props.statusOnClick}
